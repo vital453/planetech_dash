@@ -36,7 +36,7 @@ export default function Changeappro({ Stock, id, prix_unite, nom }) {
   };
 
   const get_product = () => {
-    Axios.get("http://localhost:3004/affiche_produit", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupProduct(response.data));
@@ -56,7 +56,7 @@ export default function Changeappro({ Stock, id, prix_unite, nom }) {
       //     duration: 6000,
       //   }
       // );
-      Axios.post("http://localhost:3004/ajoutappro", {
+      Axios.post("https://back-planetech.onrender.com/ajoutappro", {
         stock_appro: parseInt(quant),
         total_price: parseInt(prix_unite) * parseInt(quant),
         unite_price: parseInt(prix_unite),
@@ -67,7 +67,7 @@ export default function Changeappro({ Stock, id, prix_unite, nom }) {
       }).then((ret) => {
         console.log(ret.data);
         if (ret.data == "suc") {
-          Axios.post("http://localhost:3004/maj_stock_appro", {
+          Axios.post("https://back-planetech.onrender.com/maj_stock_appro", {
             stock: parseInt(quant) + parseInt(String(Stock)),
             product_id: id,
             seller_id: 1,

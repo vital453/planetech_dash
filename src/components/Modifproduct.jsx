@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import useSWR from "swr";
@@ -17,7 +17,9 @@ import toast, { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import { settrigg } from "@/redux/features/TriggerSlice";
 import { pic1 } from "@/assets/images";
+import JoditEditor from "jodit-react";
 // import { useRouter } from "next/router";
+import { BsFillArrowLeftCircleFill } from "react-icons/bs";
 // import { FiArrowLeftCircle } from "react-icons/fi";
 
 export default function Modifproduct({
@@ -51,6 +53,8 @@ export default function Modifproduct({
     useState(sous_soucategorieids);
   const [prix_achat, setprix_achat] = useState(purchase_price);
   const [prix_vente, setprix_vente] = useState(selling_price);
+  const [content, setContent] = useState(descriptions);
+  const editor = useRef(null);
   const [stock, setstock] = useState(stocks);
   const [discount_value, setdiscount_value] = useState(discount_values);
   // const router = useRouter();
@@ -478,9 +482,9 @@ export default function Modifproduct({
           <div className="w-full justify-start items-center text-start">
             {/* <div
               className="text-2xl text-blue-900 cursor-pointer"
-              onClick={() => router.push("/product_list")}
+              onClick={() => router.push("product_list")}
             >
-              <FiArrowLeftCircle />
+              <BsFillArrowLeftCircleFill />
             </div> */}
             <span className="text-2xl font-semibold">
               Modification d'un produit
@@ -504,7 +508,7 @@ export default function Modifproduct({
                   // value={search}
                 />
               </div>
-              <div className="flex flex-col justify-center items-start space-y-3 w-full">
+              {/* <div className="flex flex-col justify-center items-start space-y-3 w-full">
                 <span>Description</span>
                 <textarea
                   type="text"
@@ -517,6 +521,23 @@ export default function Modifproduct({
                   // onChange={(e) => setserach(e.target.value)}
                   // value={search}
                 />
+              </div> */}
+              <div className="flex flex-col justify-center items-start space-y-3 w-full">
+                <span>Description</span>
+                <div className="w-full">
+                  <JoditEditor
+                    // className="bg-white border-2  shadow-sm border-slate-300 w-full rounded-md"
+                    ref={editor}
+                    value={content}
+                    // config={config}
+                    tabIndex={1} // tabIndex of textarea
+                    onBlur={
+                      (newContent) => setdescription(newContent)
+                      // setdescription(HTMLReactParser(newContent))
+                    } // preferred to use only this option to update the content for performance reasons
+                    onChange={(newContent) => setdescription(newContent)}
+                  />
+                </div>
               </div>
               <select
                 className="p-[12px]  bg-white rounded-lg w-full shadow-sm border-slate-300 border-2 placeholder-slate-400"

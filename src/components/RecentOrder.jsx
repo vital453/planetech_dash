@@ -67,7 +67,7 @@ export default function RecentOrder() {
   }
 
   const get_commands = () => {
-    Axios.get("http://localhost:3004/get_commands", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/get_commands", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupcommands(response.data));
@@ -75,7 +75,7 @@ export default function RecentOrder() {
     });
   };
   const get_commands_validation = () => {
-    Axios.get("http://localhost:3004/get_commands_validation", {}).then(
+    Axios.get("https://back-planetech.onrender.com/get_commands_validation", {}).then(
       (response) => {
         if (response.data[0]) {
           console.log(response.data);

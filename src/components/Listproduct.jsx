@@ -21,7 +21,7 @@ export default function Listproduct() {
   const trigg = useSelector((state) => state.trigger.trigg);
 
   const get_product = () => {
-    Axios.get("http://localhost:3004/affiche_produit", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupProduct(response.data));

@@ -10,7 +10,7 @@ export default function Topcard() {
   const dispatch = useDispatch();
 
   const get_caisse = () => {
-    Axios.get("http://localhost:3004/get_caisse", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupcaisse(response.data[0].caisse));

@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
 import Modifproduct from "@/components/modifproduct";
 import { useDispatch, useSelector } from "react-redux";
@@ -31,8 +33,16 @@ export default function page({ params }) {
   const [det, setdet] = useState([]);
   const dispatch = useDispatch();
 
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/product_list");
+    },
+  });
+
+  console.log(session);
   const getdetailproduct = async () => {
-    await Axios.post("http://localhost:3004/product_detail", {
+    await Axios.post("https://back-planetech.onrender.com/product_detail", {
       id: id,
     }).then((ret) => {
       if (ret.data) {

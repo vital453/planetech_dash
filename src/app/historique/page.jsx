@@ -1,5 +1,7 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Header from "@/components/Header";
 import {
   recupcaisse,
@@ -110,12 +112,20 @@ export default function page() {
   const [progressWidth, setprogressWidth] = useState(
     (currentStep / totalSteps) * 100
   );
+
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/historique");
+    },
+  });
+
   useEffect(() => {
     setprogressWidth((currentStep / totalSteps) * 100);
   }, [currentStep]);
 
   const get_commands = () => {
-    Axios.get("http://localhost:3004/get_commands", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/get_commands", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupcommands(response.data));
@@ -124,7 +134,7 @@ export default function page() {
     });
   };
   const get_commands_validation = () => {
-    Axios.get("http://localhost:3004/get_commands_validation", {}).then(
+    Axios.get("https://back-planetech.onrender.com/get_commands_validation", {}).then(
       (response) => {
         if (response.data[0]) {
           console.log(response.data);
@@ -136,7 +146,7 @@ export default function page() {
     );
   };
   const get_caisse = () => {
-    Axios.get("http://localhost:3004/get_caisse", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupcaisse(response.data[0].caisse));
@@ -166,7 +176,7 @@ export default function page() {
           setCurrentStep(3);
         }, 1000);
 
-        Axios.post("http://localhost:3004/majstatut", {
+        Axios.post("https://back-planetech.onrender.com/majstatut", {
           invoice: invoice,
           status: n,
           seller_id: 1,
@@ -193,16 +203,13 @@ export default function page() {
                     const soldtotal =
                       parseInt(histo_command[index].total_sold) +
                       parseInt(histo_command[index].product_quantity);
-                    Axios.post(
-                      "http://localhost:3004/reducquant",
-                      {
-                        seller_id: 1,
-                        product_id: histo_command[index].product_id,
-                        stock: stockcalculer,
-                        total_sold: soldtotal,
-                        caisse: end_caisse,
-                      }
-                    ).then((rets) => {
+                    Axios.post("https://back-planetech.onrender.com/reducquant", {
+                      seller_id: 1,
+                      product_id: histo_command[index].product_id,
+                      stock: stockcalculer,
+                      total_sold: soldtotal,
+                      caisse: end_caisse,
+                    }).then((rets) => {
                       console.log(rets.data);
                       setTimeout(() => {
                         setCurrentStep(5);
@@ -453,7 +460,7 @@ export default function page() {
       <div>
         <Toaster />
       </div>
-      <Header title={"Gestion des historiques"} />
+      <Header title={"Gestion des historiques"} user={session?.user} />
       <div>
         {/* <Modal
           open={open}

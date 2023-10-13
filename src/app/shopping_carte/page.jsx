@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import {
   MDBBtn,
   MDBModal,
@@ -18,12 +20,17 @@ import CurrencyFormat from "react-currency-format";
 import { Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletepan, recupPan, vider } from "@/redux/features/panieerSlice";
-import { recupProduct } from "@/redux/features/productSlice";
+import { recupProduct, recupcaisse } from "@/redux/features/productSlice";
 import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
 import { FaRegEdit } from "react-icons/fa";
 import Changepan from "@/components/Changepan";
 import toast, { Toaster } from "react-hot-toast";
 import { useRouter } from "next/navigation";
+import {
+  openKkiapayWidget,
+  addKkiapayListener,
+  removeKkiapayListener,
+} from "kkiapay";
 
 export default function page() {
   const dispatch = useDispatch();
@@ -35,6 +42,8 @@ export default function page() {
   const [totalquant, setTotalquant] = useState(0);
   const totalSteps = 10;
   const [currentStep, setCurrentStep] = useState(0);
+  const [response, setresponse] = useState("");
+
   // Calculer la largeur de la barre de progression en pourcentage
   const [progressWidth, setprogressWidth] = useState(
     (currentStep / totalSteps) * 100
@@ -44,6 +53,12 @@ export default function page() {
 
   const router = useRouter();
 
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/vente");
+    },
+  });
   const getpan = () => {
     console.log(panier, "mon panier");
     const produits = [
@@ -74,7 +89,7 @@ export default function page() {
     );
   };
   const get_product = () => {
-    Axios.get("http://localhost:3004/affiche_produit", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupProduct(response.data));
@@ -94,12 +109,12 @@ export default function page() {
         setCurrentStep(2);
       }, 1000);
       Axios.post(
-        "http://localhost:3004/get_invoice_comand_validation",
+        "https://back-planetech.onrender.com/get_invoice_comand_validation",
         {}
       ).then((ret) => {
         for (let index = 0; index < panier.length; index++) {
           console.log(panier, "mon panier");
-          Axios.post("http://localhost:3004/ajoutcommand", {
+          Axios.post("https://back-planetech.onrender.com/ajoutcommand", {
             seller_id: 1,
             product_quantity: panier[index].product_quantity,
             total_price: panier[index].total_price,
@@ -131,7 +146,7 @@ export default function page() {
       setCurrentStep(4);
     }, 1000);
 
-    Axios.post("http://localhost:3004/ajoutcomand_validation", {
+    Axios.post("https://back-planetech.onrender.com/ajoutcomand_validation", {
       totalquant: totalquant,
       totalprix: totalprix,
       invoice: ide,
@@ -151,7 +166,7 @@ export default function page() {
   };
 
   const get_caisse = () => {
-    Axios.get("http://localhost:3004/get_caisse", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupcaisse(response.data[0].caisse));
@@ -180,7 +195,7 @@ export default function page() {
         const totalsoldactuel =
           parseInt(panier[index].total_sold) +
           parseInt(panier[index].product_quantity);
-        await Axios.post("http://localhost:3004/reducquant", {
+        await Axios.post("https://back-planetech.onrender.com/reducquant", {
           seller_id: 1,
           product_id: panier[index].product_id,
           stock: stockactuel,
@@ -193,7 +208,7 @@ export default function page() {
           }, 1000);
         });
       }
-      Axios.get("http://localhost:3004/affiche_produit", {}).then(
+      Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then(
         (response) => {
           if (response.data[0]) {
             console.log(response.data);
@@ -225,6 +240,40 @@ export default function page() {
       toast("aucun produit dans le panier");
     }
   };
+
+  const open = async () => {
+    await openKkiapayWidget({
+      // amount: 1,
+      amount: totalprix,
+      api_key: "f360c365307f9afa1c1cded51173173beef6f22b",
+      // sandbox: true,
+      // email: String(),
+      email: "mevivital@gmail.com",
+      // phone: "61940010",
+      // name: "viyt",
+      // theme: "#1586FD",
+    });
+  };
+
+  function successHandler(response) {
+    console.log(response);
+    setresponse(response);
+  }
+
+  useEffect(() => {
+    addKkiapayListener("success", successHandler);
+    return () => {
+      removeKkiapayListener("success");
+    };
+  }, []);
+
+  useEffect(() => {
+    if (response !== "") {
+      // sendEmail();
+      console.log("cest bon ");
+      // envoiemail();
+    }
+  }, [response]);
 
   useEffect(() => {
     setprogressWidth((currentStep / totalSteps) * 100);

@@ -1,5 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import Axios from "axios";
 import { recupProduct } from "@/redux/features/productSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +16,12 @@ import Link from "next/link";
 import Header from "@/components/Header";
 
 export default function page() {
+  const { data: session } = useSession({
+    required: true,
+    onUnauthenticated() {
+      redirect("/api/auth/signin?callbackUrl=/vente");
+    },
+  });
   const [add, setadd] = useState(false);
   const dispatch = useDispatch();
 
@@ -26,7 +34,7 @@ export default function page() {
   const toggleShow = () => setOptSmModal(!optSmModal);
 
   const get_product = () => {
-    Axios.get("http://localhost:3004/affiche_produit", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupProduct(response.data));
@@ -43,7 +51,7 @@ export default function page() {
   return (
     <>
       <div className="w-full justify-start items-center space-y-4 py-4 px-4">
-      <Header title={"Gestion des ventes"}/>
+        <Header title={"Gestion des ventes"} user={session?.user} />
         <Link href={"/shopping_carte"}>
           <Button
             color="blue"

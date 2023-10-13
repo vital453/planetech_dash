@@ -18,6 +18,7 @@ import { settrigg } from "@/redux/features/TriggerSlice";
 import toast, { Toaster } from "react-hot-toast";
 import JoditEditor from "jodit-react";
 import HTMLReactParser from "html-react-parser";
+import { BsFillArrowLeftCircleFill } from "react-icons/bs";
 // import { FiArrowLeftCircle } from "react-icons/fi";
 // import { useRouter } from "next/router";
 // import { Editor } from "react-draft-wysiwyg";
@@ -271,7 +272,7 @@ export default function Addproduct() {
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const { data, error, isLoading } = useSWR(
-    "http://localhost:3004/affichecategorie",
+    "https://back-planetech.onrender.com/affichecategorie",
     fetcher
   );
   if (error) {
@@ -284,7 +285,7 @@ export default function Addproduct() {
 
   const getcategory = () => {
     // console.log(`${process.env.baseurl}` + "valuer enviro");
-    Axios.get("http://localhost:3004/affichecategorie", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affichecategorie", {}).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
         dispatch(recupCateg(response.data));
@@ -293,7 +294,7 @@ export default function Addproduct() {
     });
   };
   const getsubcategory = () => {
-    Axios.get("http://localhost:3004/affichesub_category", {}).then(
+    Axios.get("https://back-planetech.onrender.com/affichesub_category", {}).then(
       (response) => {
         if (response.data[0]) {
           console.log(response.data);
@@ -304,7 +305,7 @@ export default function Addproduct() {
     );
   };
   const getsub_subcategory = () => {
-    Axios.get("http://localhost:3004/affichesub_sub_category", {}).then(
+    Axios.get("https://back-planetech.onrender.com/affichesub_sub_category", {}).then(
       (response) => {
         if (response.data[0]) {
           console.log(response.data);
@@ -319,7 +320,7 @@ export default function Addproduct() {
     // setprogress(true);
     const formdata = new FormData();
     formdata.append("avatar", obj);
-    await Axios.put(`http://localhost:3004/insert_image/${e}/${a}`, formdata, {
+    await Axios.put(`https://back-planetech.onrender.com/insert_image/${e}/${a}`, formdata, {
       headers: { "Content-Type": "multipart/form-data" },
     })
       .then((res) => {
@@ -368,7 +369,7 @@ export default function Addproduct() {
       setTimeout(() => {
         setCurrentStep(2);
       }, 1000);
-      await Axios.post("http://localhost:3004/add_product", {
+      await Axios.post("https://back-planetech.onrender.com/add_product", {
         nom: nom,
         description:
           description === ""
@@ -433,7 +434,7 @@ export default function Addproduct() {
             }, 1000);
           }
           const id = ret.data[0].id;
-          Axios.get("http://localhost:3004/affiche_produit", {}).then(
+          Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then(
             (response) => {
               if (response.data[0]) {
                 console.log(response.data);
@@ -477,7 +478,7 @@ export default function Addproduct() {
               className="text-2xl text-blue-900 cursor-pointer"
               onClick={() => dispatch(settrigg(false))}
             >
-              <FiArrowLeftCircle />
+              <BsFillArrowLeftCircleFill />
             </div>
             <span className="text-2xl font-semibold">
               Ajout d'un nouveau produit
@@ -523,17 +524,14 @@ export default function Addproduct() {
                     value={content}
                     // config={config}
                     tabIndex={1} // tabIndex of textarea
-                    onBlur={(newContent) =>
-                      setdescription(HTMLReactParser(newContent))
+                    onBlur={
+                      (newContent) => setdescription(newContent)
+                      // setdescription(HTMLReactParser(newContent))
                     } // preferred to use only this option to update the content for performance reasons
-                    onChange={(newContent) =>
-                      setdescription(HTMLReactParser(newContent))
-                    }
+                    onChange={(newContent) => setdescription(newContent)}
                   />
                 </div>
               </div>
-              <div>{description}</div>
-
               <select
                 className="p-[12px]  bg-white rounded-lg w-full shadow-sm border-slate-300 border-2 placeholder-slate-400 -mt-10"
                 name="country-selector"

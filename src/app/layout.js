@@ -8,6 +8,7 @@ import "@fontsource/roboto/300.css";
 import "@fontsource/roboto/400.css";
 import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
+import AuthProvider from "./context/AuthProvider";
 
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -35,7 +36,9 @@ export default function RootLayout({ children }) {
       </head>
       <body className={inter.className}>
         <Storeprovider>
-          <Sidebar>{children}</Sidebar>
+          <AuthProvider>
+            <Sidebar>{children}</Sidebar>
+          </AuthProvider>
         </Storeprovider>
       </body>
     </html>
