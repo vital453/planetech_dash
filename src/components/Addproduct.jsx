@@ -41,11 +41,89 @@ export default function Addproduct() {
   const [type_promotion, settype_promotion] = useState("");
   const [progress, setprogress] = useState(false);
   const [message, setmessage] = useState("");
+  const [fileinputstate, setfileinputstate] = useState("");
+  const [previewsource, setpreviewsource] = useState("");
+  const [fileinputstate2, setfileinputstate2] = useState("");
+  const [previewsource2, setpreviewsource2] = useState("");
+  const [fileinputstate3, setfileinputstate3] = useState("");
+  const [previewsource3, setpreviewsource3] = useState("");
+  const [fileinputstate4, setfileinputstate4] = useState("");
+  const [previewsource4, setpreviewsource4] = useState("");
+  const [fileinputstate5, setfileinputstate5] = useState("");
+  const [previewsource5, setpreviewsource5] = useState("");
+  const [fileinputstate6, setfileinputstate6] = useState("");
+  const [previewsource6, setpreviewsource6] = useState("");
 
   const dispatch = useDispatch();
 
   // const router = useRouter()
 
+  const handlesetimage = (e) => {
+    const file = e.target.files[0];
+    previewfile(file);
+  };
+  const previewfile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource(reader.result);
+    };
+  };
+  const handlesetimage2 = (e) => {
+    const file = e.target.files[0];
+    previewfile2(file);
+  };
+  const previewfile2 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource(reader.result);
+    };
+  };
+  const handlesetimage3 = (e) => {
+    const file = e.target.files[0];
+    previewfile3(file);
+  };
+  const previewfile3 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource3(reader.result);
+    };
+  };
+  const handlesetimage4 = (e) => {
+    const file = e.target.files[0];
+    previewfile4(file);
+  };
+  const previewfile4 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource4(reader.result);
+    };
+  };
+  const handlesetimage5 = (e) => {
+    const file = e.target.files[0];
+    previewfile5(file);
+  };
+  const previewfile5 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource5(reader.result);
+    };
+  };
+  const handlesetimage6 = (e) => {
+    const file = e.target.files[0];
+    previewfile6(file);
+  };
+  const previewfile6 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource6(reader.result);
+    };
+  };
   const categories = useSelector((state) => state.product.categories);
   const sub_category = useSelector((state) => state.product.sub_category);
   const sub_sub_category = useSelector(
@@ -285,44 +363,67 @@ export default function Addproduct() {
 
   const getcategory = () => {
     // console.log(`${process.env.baseurl}` + "valuer enviro");
-    Axios.get("https://back-planetech.onrender.com/affichecategorie", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affichecategorie", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupCateg(response.data));
+          // localStorage.setItem("change_version", "non");
+        }
+      }
+    );
+  };
+  const getsubcategory = () => {
+    Axios.get(
+      "https://back-planetech.onrender.com/affichesub_category",
+      {}
+    ).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
-        dispatch(recupCateg(response.data));
+        dispatch(recupsub_category(response.data));
         // localStorage.setItem("change_version", "non");
       }
     });
   };
-  const getsubcategory = () => {
-    Axios.get("https://back-planetech.onrender.com/affichesub_category", {}).then(
-      (response) => {
-        if (response.data[0]) {
-          console.log(response.data);
-          dispatch(recupsub_category(response.data));
-          // localStorage.setItem("change_version", "non");
-        }
-      }
-    );
-  };
   const getsub_subcategory = () => {
-    Axios.get("https://back-planetech.onrender.com/affichesub_sub_category", {}).then(
-      (response) => {
-        if (response.data[0]) {
-          console.log(response.data);
-          dispatch(recupsub_sub_category(response.data));
-          // localStorage.setItem("change_version", "non");
-        }
+    Axios.get(
+      "https://back-planetech.onrender.com/affichesub_sub_category",
+      {}
+    ).then((response) => {
+      if (response.data[0]) {
+        console.log(response.data);
+        dispatch(recupsub_sub_category(response.data));
+        // localStorage.setItem("change_version", "non");
       }
-    );
+    });
   };
 
+  const sendimagetonetwork = () => {
+    if (!previewsource) return;
+    uploadimage(previewsource);
+  };
+  const uploadimage = async (base64encodedimage) => {
+    try {
+      await fetch("https://back-planetech.onrender.com/api/upload", {
+        method: "POST",
+        body: JSON.stringify({ data: base64encodedimage }),
+        headers: { "Content-type": "application/json" },
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const submit = async (e, a, obj) => {
     // setprogress(true);
     const formdata = new FormData();
     formdata.append("avatar", obj);
-    await Axios.put(`https://back-planetech.onrender.com/insert_image/${e}/${a}`, formdata, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
+    await Axios.post(
+      "https://back-planetech.onrender.com/insert_image/",
+      { data: obj, id: e, stat: a },
+      {
+        headers: { "Content-type": "application/json" },
+      }
+    )
       .then((res) => {
         // then print response status
         console.warn(res);
@@ -362,80 +463,91 @@ export default function Addproduct() {
 
   const envoi = async () => {
     if (prix_achat > 0 && prix_vente > 0 && stock > 0) {
-      setTimeout(() => {
-        setprogress(true);
-        setCurrentStep(1);
-      }, 1000);
-      setTimeout(() => {
-        setCurrentStep(2);
-      }, 1000);
-      await Axios.post("https://back-planetech.onrender.com/add_product", {
-        nom: nom,
-        description:
-          description === ""
-            ? "Aucune description pour ce article"
-            : description,
-        categorieid: categorieid,
-        souscategorieid: souscategorieid === 0 ? 0 : souscategorieid,
-        sous_soucategorieid: sous_soucategorieid === 0 ? 0 : souscategorieid,
-        prix_achat: prix_achat,
-        prix_vente: prix_vente,
-        stock: stock,
-        discount_value: discount_value,
-        discount_type: discount_type === "0" ? "" : discount_type,
-        seller_id: 1,
-      }).then((ret) => {
-        if (ret.data) {
-          setTimeout(() => {
-            setCurrentStep(3);
-          }, 1000);
-          console.log(ret.data[0].id);
-          if (userInfo.file.name) {
-            submit(ret.data[0].id, 1, userInfo.file);
-          } else {
+      if (previewsource) {
+        setTimeout(() => {
+          setprogress(true);
+          setCurrentStep(1);
+        }, 1000);
+        setTimeout(() => {
+          setCurrentStep(2);
+        }, 1000);
+        await Axios.post("https://back-planetech.onrender.com/add_product", {
+          nom: nom,
+          description:
+            description === ""
+              ? "Aucune description pour ce article"
+              : description,
+          categorieid: parseInt(categorieid),
+          souscategorieid:
+            souscategorieid === 0 ? 0 : parseInt(souscategorieid),
+          sous_soucategorieid:
+            sous_soucategorieid === 0 ? 0 : parseInt(souscategorieid),
+          prix_achat: parseInt(prix_achat),
+          prix_vente: parseInt(prix_vente),
+          stock: parseInt(stock),
+          discount_value: parseInt(discount_value),
+          discount_type: discount_type === "0" ? "" : discount_type,
+          seller_id: 1,
+        }).then((ret) => {
+          if (ret.data) {
             setTimeout(() => {
-              setCurrentStep(4);
+              setCurrentStep(3);
             }, 1000);
-          }
-          if (userInfo2.file.name) {
-            submit(ret.data[0].id, 2, userInfo2.file);
-          } else {
-            setTimeout(() => {
-              setCurrentStep(5);
-            }, 1000);
-          }
+            console.log(ret.data);
+            if (previewsource) {
+              // if (userInfo.file.name) {
+              submit(ret.data, 1, previewsource);
+              // submit(ret.data[0].id, 1, userInfo.file);
+            } else {
+              setTimeout(() => {
+                setCurrentStep(4);
+              }, 1000);
+            }
+            if (previewsource2) {
+              // if (userInfo2.file.name) {
+              submit(ret.data, 2, previewsource2);
+            } else {
+              setTimeout(() => {
+                setCurrentStep(5);
+              }, 1000);
+            }
 
-          if (userInfo3.file.name) {
-            submit(ret.data[0].id, 3, userInfo3.file);
-          } else {
-            setTimeout(() => {
-              setCurrentStep(6);
-            }, 1000);
-          }
-          if (userInfo4.file.name) {
-            submit(ret.data[0].id, 4, userInfo4.file);
-          } else {
-            setTimeout(() => {
-              setCurrentStep(7);
-            }, 1000);
-          }
-          if (userInfo5.file.name) {
-            submit(ret.data[0].id, 5, userInfo5.file);
-          } else {
-            setTimeout(() => {
-              setCurrentStep(8);
-            }, 1000);
-          }
-          if (userInfo6.file.name) {
-            submit(ret.data[0].id, 6, userInfo6.file);
-          } else {
-            setTimeout(() => {
-              setCurrentStep(9);
-            }, 1000);
-          }
-          const id = ret.data[0].id;
-          Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then(
-            (response) => {
+            if (previewsource3) {
+              // if (userInfo3.file.name) {
+              submit(ret.data, 3, previewsource3);
+            } else {
+              setTimeout(() => {
+                setCurrentStep(6);
+              }, 1000);
+            }
+            if (previewsource4) {
+              // if (userInfo4.file.name) {
+              submit(ret.data, 4, previewsource4);
+            } else {
+              setTimeout(() => {
+                setCurrentStep(7);
+              }, 1000);
+            }
+            if (previewsource5) {
+              // if (userInfo5.file.name) {
+              submit(ret.data, 5, previewsource5);
+            } else {
+              setTimeout(() => {
+                setCurrentStep(8);
+              }, 1000);
+            }
+            if (previewsource6) {
+              // if (userInfo6.file.name) {
+              submit(ret.data, 6, previewsource6);
+            } else {
+              setTimeout(() => {
+                setCurrentStep(9);
+              }, 1000);
+            }
+            Axios.get(
+              "https://back-planetech.onrender.com/affiche_produit",
+              {}
+            ).then((response) => {
               if (response.data[0]) {
                 console.log(response.data);
                 dispatch(recupProduct(response.data));
@@ -451,10 +563,12 @@ export default function Addproduct() {
                 }, 4000);
                 // localStorage.setItem("change_version", "non");
               }
-            }
-          );
-        }
-      });
+            });
+          }
+        });
+      } else {
+        toast("veuillez renseigner minimum la premiere image");
+      }
     } else {
       toast("veuillez remplir les champs obligatoire");
     }
@@ -656,16 +770,17 @@ export default function Addproduct() {
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo.filepreview
-                        ? "custum-file-upload"
+                      !previewsource
+                        ? // !userInfo.filepreview
+                          "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file1"
                   >
-                    {userInfo.filepreview != null ? (
+                    {previewsource != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo.filepreview}
+                          src={previewsource}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -697,7 +812,7 @@ export default function Addproduct() {
                         </svg>
                       </div>
                     )}
-                    {!userInfo.filepreview && (
+                    {!previewsource && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -705,23 +820,35 @@ export default function Addproduct() {
                     <input
                       type="file"
                       id="file1"
-                      onChange={handleInputChange}
+                      onChange={handlesetimage}
+                      // onChange={handleInputChange}
+                      value={fileinputstate}
                     />
                   </label>
                 </div>
+                {/* {previewsource && (
+                  <div className="relative w-20 h-20">
+                    <Image
+                      src={previewsource}
+                      alt="sjf"
+                      fill
+                      className="object-cover rounded-xl"
+                    />
+                  </div>
+                )} */}
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo2.filepreview
+                      !previewsource2
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file2"
                   >
-                    {userInfo2.filepreview != null ? (
+                    {previewsource2 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo2.filepreview}
+                          src={previewsource2}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -752,7 +879,7 @@ export default function Addproduct() {
                         </svg>
                       </div>
                     )}
-                    {!userInfo2.filepreview && (
+                    {!previewsource2 && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -760,23 +887,25 @@ export default function Addproduct() {
                     <input
                       type="file"
                       id="file2"
-                      onChange={handleInputChange2}
+                      onChange={handlesetimage2}
+                      // onChange={handleInputChange}
+                      value={fileinputstate2}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo3.filepreview
+                      !previewsource3
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file3"
                   >
-                    {userInfo3.filepreview != null ? (
+                    {previewsource3 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo3.filepreview}
+                          src={previewsource3}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -807,7 +936,7 @@ export default function Addproduct() {
                         </svg>
                       </div>
                     )}
-                    {!userInfo3.filepreview && (
+                    {!previewsource3 && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -815,7 +944,9 @@ export default function Addproduct() {
                     <input
                       type="file"
                       id="file3"
-                      onChange={handleInputChange3}
+                      onChange={handlesetimage3}
+                      // onChange={handleInputChange}
+                      value={fileinputstate3}
                     />
                   </label>
                 </div>
@@ -824,16 +955,16 @@ export default function Addproduct() {
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo4.filepreview
+                      !previewsource4
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file4"
                   >
-                    {userInfo4.filepreview != null ? (
+                    {previewsource4 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo4.filepreview}
+                          src={previewsource4}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -864,7 +995,7 @@ export default function Addproduct() {
                         </svg>
                       </div>
                     )}
-                    {!userInfo4.filepreview && (
+                    {!previewsource4 && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -872,23 +1003,25 @@ export default function Addproduct() {
                     <input
                       type="file"
                       id="file4"
-                      onChange={handleInputChange4}
+                      onChange={handlesetimage4}
+                      // onChange={handleInputChange}
+                      value={fileinputstate4}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo5.filepreview
+                      !previewsource5
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file5"
                   >
-                    {userInfo5.filepreview != null ? (
+                    {previewsource5 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo5.filepreview}
+                          src={previewsource5}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -919,7 +1052,7 @@ export default function Addproduct() {
                         </svg>
                       </div>
                     )}
-                    {!userInfo5.filepreview && (
+                    {!previewsource5 && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -927,23 +1060,25 @@ export default function Addproduct() {
                     <input
                       type="file"
                       id="file5"
-                      onChange={handleInputChange5}
+                      onChange={handlesetimage5}
+                      // onChange={handleInputChange}
+                      value={fileinputstate5}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo6.filepreview
+                      !previewsource6
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file6"
                   >
-                    {userInfo6.filepreview != null ? (
+                    {previewsource6 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo6.filepreview}
+                          src={previewsource6}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -974,7 +1109,7 @@ export default function Addproduct() {
                         </svg>
                       </div>
                     )}
-                    {!userInfo6.filepreview && (
+                    {!previewsource6 && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -982,7 +1117,9 @@ export default function Addproduct() {
                     <input
                       type="file"
                       id="file6"
-                      onChange={handleInputChange6}
+                      onChange={handlesetimage6}
+                      // onChange={handleInputChange}
+                      value={fileinputstate6}
                     />
                   </label>
                 </div>
@@ -1093,6 +1230,7 @@ export default function Addproduct() {
             <Button
               color="blue"
               onClick={() => {
+                // sendimagetonetwork();
                 envoi();
               }}
             >

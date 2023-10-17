@@ -1,19 +1,20 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { pic1 } from "@/assets/images";
 import Image from "next/image";
-import CurrencyFormat from "react-currency-format";
+// import CurrencyFormat from "react-currency-format";
 import { HiArchive } from "react-icons/hi";
 import { Button } from "@material-tailwind/react";
 import Link from "next/link";
 import { AiFillCheckCircle, AiFillCloseCircle } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
 import toast, { Toaster } from "react-hot-toast";
+import { picture } from "../assets/images/index";
 import {
   deleteProduct,
   setProductPan,
   updateQuantity,
 } from "@/redux/features/panieerSlice";
+import { formatPrice } from "./Utilscamp";
 
 export default function Card1({ data }) {
   console.log(data.picture1);
@@ -130,7 +131,8 @@ export default function Card1({ data }) {
       <div className="bg-white shadow-xl rounded-xl w-full justify-start items-center">
         <div className="relative w-full bg-cover bg-center h-56">
           <Image
-            src={pic1}
+            // src={picture}
+            src={data.picture1}
             alt="sjf"
             fill
             className="object-cover rounded-t-xl"
@@ -155,13 +157,7 @@ export default function Card1({ data }) {
           <div className="w-full justify-between items-center flex">
             <div>
               <p className="text-xl text-gray-900">
-                <CurrencyFormat
-                  value={data.selling_price === 0 ? 0 : data.selling_price}
-                  displayType={"text"}
-                  thousandSeparator={true}
-                  suffix={" FCFA"}
-                  renderText={(value) => <span>{value}</span>}
-                />
+                {data.selling_price === 0 ? 0 : formatPrice(data.selling_price)}
               </p>
             </div>
             <div className="flex justify-center items-center space-x-1">

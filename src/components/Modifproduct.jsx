@@ -8,6 +8,7 @@ import Axios from "axios";
 import {
   recupCateg,
   recupProduct,
+  recupdetail,
   recupsub_category,
   recupsub_sub_category,
 } from "@/redux/features/productSlice";
@@ -16,47 +17,51 @@ import Image from "next/image";
 import toast, { Toaster } from "react-hot-toast";
 import "react-toastify/dist/ReactToastify.css";
 import { settrigg } from "@/redux/features/TriggerSlice";
-import { pic1 } from "@/assets/images";
 import JoditEditor from "jodit-react";
 // import { useRouter } from "next/router";
 import { BsFillArrowLeftCircleFill } from "react-icons/bs";
+import { useRouter } from 'next/navigation'
 // import { FiArrowLeftCircle } from "react-icons/fi";
 
-export default function Modifproduct({
-  id,
-  name,
-  descriptions,
-  discount_types,
-  purchase_price,
-  selling_price,
-  stocks,
-  categorieids,
-  souscategorieids,
-  sous_soucategorieids,
-  picture1,
-  picture2,
-  picture3,
-  picture4,
-  picture5,
-  picture6,
-  discount_values,
-}) {
-  const [nom, setnom] = useState(name);
-  const [description, setdescription] = useState(descriptions);
-  const [discount_type, setdiscount_type] = useState(discount_types);
-  const [categorieid, setcategorieid] = useState(categorieids);
+const rep = (id) => {
+  // Créez une expression régulière pour correspondre aux lettres alphabétiques
+  const regexAlphabet = /[a-zA-Z]/;
+  // Utilisez la méthode test() de l'expression régulière pour vérifier le contenu de la variable
+  const contientLettres = regexAlphabet.test(id);
+  // Utilisez le résultat pour prendre des mesures
+  if (contientLettres) {
+    return notFound();
+    // console.log("La variable contient des lettres ou des caractères alphabétiques.");
+  } else {
+    return id;
+    // console.log("La variable ne contient que des chiffres ou des caractères spéciaux.");
+  }
+};
+
+export default function Modifproduct({ ids }) {
+  const id = rep(ids);
+  const router = useRouter()
+  const [nom, setnom] = useState("");
+  const [description, setdescription] = useState("");
+  const [discount_type, setdiscount_type] = useState("");
+  const [categorieid, setcategorieid] = useState("");
   const [categorie, setcategorie] = useState([]);
-  const [souscategorieid, setsouscategorieid] = useState(souscategorieids);
+  const [souscategorieid, setsouscategorieid] = useState("");
   const [souscategorie, setsouscategorie] = useState([]);
   const [sous_soucategorie, setsous_soucategorie] = useState([]);
-  const [sous_soucategorieid, setsous_soucategorieid] =
-    useState(sous_soucategorieids);
-  const [prix_achat, setprix_achat] = useState(purchase_price);
-  const [prix_vente, setprix_vente] = useState(selling_price);
-  const [content, setContent] = useState(descriptions);
+  const [sous_soucategorieid, setsous_soucategorieid] = useState("");
+  const [prix_achat, setprix_achat] = useState("");
+  const [prix_vente, setprix_vente] = useState("");
+  const [picture1, setpicture1] = useState("");
+  const [picture2, setpicture2] = useState("");
+  const [picture3, setpicture3] = useState("");
+  const [picture4, setpicture4] = useState("");
+  const [picture5, setpicture5] = useState("");
+  const [picture6, setpicture6] = useState("");
+  const [content, setContent] = useState("");
   const editor = useRef(null);
-  const [stock, setstock] = useState(stocks);
-  const [discount_value, setdiscount_value] = useState(discount_values);
+  const [stock, setstock] = useState("");
+  const [discount_value, setdiscount_value] = useState("");
   // const router = useRouter();
 
   const [type_promotion, settype_promotion] = useState("");
@@ -64,6 +69,114 @@ export default function Modifproduct({
   const [message, setmessage] = useState("");
 
   const dispatch = useDispatch();
+
+  const [fileinputstate, setfileinputstate] = useState("");
+  const [previewsource, setpreviewsource] = useState("");
+  const [fileinputstate2, setfileinputstate2] = useState("");
+  const [previewsource2, setpreviewsource2] = useState("");
+  const [fileinputstate3, setfileinputstate3] = useState("");
+  const [previewsource3, setpreviewsource3] = useState("");
+  const [fileinputstate4, setfileinputstate4] = useState("");
+  const [previewsource4, setpreviewsource4] = useState("");
+  const [fileinputstate5, setfileinputstate5] = useState("");
+  const [previewsource5, setpreviewsource5] = useState("");
+  const [fileinputstate6, setfileinputstate6] = useState("");
+  const [previewsource6, setpreviewsource6] = useState("");
+
+  // const router = useRouter()
+
+  const getdetailproduct = async () => {
+    await Axios.post("https://back-planetech.onrender.com/product_detail", {
+      id: id,
+    }).then((ret) => {
+      if (ret.data) {
+        dispatch(recupdetail(ret.data));
+        setnom(ret.data.name);
+        setdescription(ret.data.description);
+        setdiscount_type(ret.data.discount_type);
+        setprix_achat(ret.data.purchase_price);
+        setprix_vente(ret.data.selling_price);
+        setstock(ret.data.stock);
+        setcategorieid(ret.data.id_category);
+        setsouscategorieid(ret.data.id_sub_category);
+        setsous_soucategorieid(ret.data.id_sub_sub_category);
+        setpicture1(ret.data.picture1);
+        setpicture2(ret.data.picture2);
+        setpicture3(ret.data.picture3);
+        setpicture4(ret.data.picture4);
+        setpicture5(ret.data.picture5);
+        setpicture6(ret.data.picture6);
+        setdiscount_value(ret.data.discount_value);
+      }
+    });
+  };
+
+  const handlesetimage = (e) => {
+    const file = e.target.files[0];
+    previewfile(file);
+  };
+  const previewfile = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource(reader.result);
+    };
+  };
+  const handlesetimage2 = (e) => {
+    const file = e.target.files[0];
+    previewfile2(file);
+  };
+  const previewfile2 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource(reader.result);
+    };
+  };
+  const handlesetimage3 = (e) => {
+    const file = e.target.files[0];
+    previewfile3(file);
+  };
+  const previewfile3 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource3(reader.result);
+    };
+  };
+  const handlesetimage4 = (e) => {
+    const file = e.target.files[0];
+    previewfile4(file);
+  };
+  const previewfile4 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource4(reader.result);
+    };
+  };
+  const handlesetimage5 = (e) => {
+    const file = e.target.files[0];
+    previewfile5(file);
+  };
+  const previewfile5 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource5(reader.result);
+    };
+  };
+  const handlesetimage6 = (e) => {
+    const file = e.target.files[0];
+    previewfile6(file);
+  };
+  const previewfile6 = (file) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setpreviewsource6(reader.result);
+    };
+  };
 
   const categories = useSelector((state) => state.product.categories);
   const sub_category = useSelector((state) => state.product.sub_category);
@@ -81,6 +194,10 @@ export default function Modifproduct({
   useEffect(() => {
     setprogressWidth((currentStep / totalSteps) * 100);
   }, [currentStep]);
+
+  useEffect(() => {
+    getdetailproduct();
+  }, []);
 
   const [userInfo, setuserInfo] = useState({
     file: [],
@@ -280,7 +397,7 @@ export default function Modifproduct({
 
   const fetcher = (...args) => fetch(...args).then((res) => res.json());
   const { data, error, isLoading } = useSWR(
-    "http://localhost:3004/affichecategorie",
+    "https://back-planetech.onrender.com/affichecategorie",
     fetcher
   );
   if (error) {
@@ -293,44 +410,52 @@ export default function Modifproduct({
 
   const getcategory = () => {
     // console.log(`${process.env.baseurl}` + "valuer enviro");
-    Axios.get("http://localhost:3004/affichecategorie", {}).then((response) => {
+    Axios.get("https://back-planetech.onrender.com/affichecategorie", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupCateg(response.data));
+          // localStorage.setItem("change_version", "non");
+        }
+      }
+    );
+  };
+  const getsubcategory = () => {
+    Axios.get(
+      "https://back-planetech.onrender.com/affichesub_category",
+      {}
+    ).then((response) => {
       if (response.data[0]) {
         console.log(response.data);
-        dispatch(recupCateg(response.data));
+        dispatch(recupsub_category(response.data));
         // localStorage.setItem("change_version", "non");
       }
     });
   };
-  const getsubcategory = () => {
-    Axios.get("http://localhost:3004/affichesub_category", {}).then(
-      (response) => {
-        if (response.data[0]) {
-          console.log(response.data);
-          dispatch(recupsub_category(response.data));
-          // localStorage.setItem("change_version", "non");
-        }
-      }
-    );
-  };
   const getsub_subcategory = () => {
-    Axios.get("http://localhost:3004/affichesub_sub_category", {}).then(
-      (response) => {
-        if (response.data[0]) {
-          console.log(response.data);
-          dispatch(recupsub_sub_category(response.data));
-          // localStorage.setItem("change_version", "non");
-        }
+    Axios.get(
+      "https://back-planetech.onrender.com/affichesub_sub_category",
+      {}
+    ).then((response) => {
+      if (response.data[0]) {
+        console.log(response.data);
+        dispatch(recupsub_sub_category(response.data));
+        // localStorage.setItem("change_version", "non");
       }
-    );
+    });
   };
 
   const submit = async (e, a, obj) => {
     // setprogress(true);
     const formdata = new FormData();
     formdata.append("avatar", obj);
-    await Axios.put(`http://localhost:3004/insert_image/${e}/${a}`, formdata, {
-      headers: { "Content-Type": "multipart/form-data" },
-    })
+    await Axios.post(
+      "https://back-planetech.onrender.com/insert_image/",
+      { data: obj, id: e, stat: a },
+      {
+        headers: { "Content-type": "application/json" },
+      }
+    )
       .then((res) => {
         // then print response status
         console.warn(res);
@@ -376,18 +501,18 @@ export default function Modifproduct({
     setTimeout(() => {
       setCurrentStep(2);
     }, 1000);
-    await Axios.post("http://localhost:3004/edit_product", {
+    await Axios.post("https://back-planetech.onrender.com/edit_product", {
       id_product: id,
       nom: nom,
       description: description,
-      categorieid: categorieid,
-      souscategorieid: souscategorieid,
-      sous_soucategorieid: souscategorieid,
-      prix_achat: prix_achat,
-      prix_vente: prix_vente,
-      stock: stock,
+      categorieid: parseInt(categorieid),
+      souscategorieid: parseInt(souscategorieid),
+      sous_soucategorieid: parseInt(souscategorieid),
+      prix_achat: parseInt(prix_achat),
+      prix_vente: parseInt(prix_vente),
+      stock: parseInt(stock),
       discount_type: discount_type,
-      discount_value: discount_value,
+      discount_value: parseInt(discount_value),
       seller_id: 1,
     }).then((ret) => {
       if (ret.data === "suc") {
@@ -438,26 +563,28 @@ export default function Modifproduct({
             setCurrentStep(9);
           }, 1000);
         }
-        Axios.get("http://localhost:3004/affiche_produit", {}).then(
-          (response) => {
-            if (response.data[0]) {
-              console.log(response.data);
-              dispatch(recupProduct(response.data));
-              setTimeout(() => {
-                setCurrentStep(10);
-              }, 1000);
-              setTimeout(() => {
-                setprogress(false);
-                // toast("produit ajouter");
-                toast("produit modifier avec succes");
-              }, 2000);
-              setTimeout(() => {
-                dispatch(settrigg(false));
-              }, 4000);
-              // localStorage.setItem("change_version", "non");
-            }
+        Axios.get(
+          "https://back-planetech.onrender.com/affiche_produit",
+          {}
+        ).then((response) => {
+          if (response.data[0]) {
+            console.log(response.data);
+            dispatch(recupProduct(response.data));
+            setTimeout(() => {
+              setCurrentStep(10);
+            }, 1000);
+            setTimeout(() => {
+              setprogress(false);
+              // toast("produit ajouter");
+              toast("produit modifier avec succes");
+            }, 2000);
+            setTimeout(() => {
+              dispatch(settrigg(false));
+            }, 4000);
+            router.push('/product_list')
+            // localStorage.setItem("change_version", "non");
           }
-        );
+        });
       }
     });
   };
@@ -495,7 +622,7 @@ export default function Modifproduct({
           <div className="flex flex-col justify-center items-center w-full md:flex-row md:w-full md:justify-between md:items-start space-y-4 md:space-y-0 md:space-x-4">
             <div className="w-full md:w-1/2 flex flex-col justify-center items-center space-y-4 md:space-y-10">
               <div className="flex flex-col justify-center items-start space-y-3 w-full">
-                <span>Nom</span>
+                <span>Nom {id}</span>
                 <input
                   type="text"
                   className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"
@@ -528,7 +655,7 @@ export default function Modifproduct({
                   <JoditEditor
                     // className="bg-white border-2  shadow-sm border-slate-300 w-full rounded-md"
                     ref={editor}
-                    value={content}
+                    value={description}
                     // config={config}
                     tabIndex={1} // tabIndex of textarea
                     onBlur={
@@ -666,16 +793,16 @@ export default function Modifproduct({
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo.filepreview && picture1 == null
+                      !previewsource && picture1 == null
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file1"
                   >
-                    {userInfo.filepreview != null ? (
+                    {previewsource != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo.filepreview}
+                          src={previewsource}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -684,7 +811,7 @@ export default function Modifproduct({
                     ) : picture1 != null ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={pic1}
+                          src={picture1}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -716,31 +843,34 @@ export default function Modifproduct({
                         </svg>
                       </div>
                     )}
-                    {!userInfo.filepreview && picture1 == null && (
+                    {!previewsource && picture1 == null && (
                       <div className="text">
-                        <span>Click to upload imagegt</span>
+                        <span>Click to upload image</span>
                       </div>
                     )}
                     <input
                       type="file"
                       id="file1"
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
+                      onChange={handlesetimage}
+                      // onChange={handleInputChange}
+                      value={fileinputstate}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo2.filepreview && picture2 == null
+                      !previewsource2 && picture2 == null
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file2"
                   >
-                    {userInfo2.filepreview != null ? (
+                    {previewsource2 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo2.filepreview}
+                          src={previewsource2}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -749,7 +879,7 @@ export default function Modifproduct({
                     ) : picture2 != null ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={pic1}
+                          src={picture2}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -780,7 +910,7 @@ export default function Modifproduct({
                         </svg>
                       </div>
                     )}
-                    {!userInfo2.filepreview && picture2 == null && (
+                    {!previewsource2 && picture2 == null && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -788,23 +918,25 @@ export default function Modifproduct({
                     <input
                       type="file"
                       id="file2"
-                      onChange={handleInputChange2}
+                      onChange={handlesetimage2}
+                      // onChange={handleInputChange}
+                      value={fileinputstate2}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo3.filepreview && picture3 == null
+                      !previewsource3 && picture3 == null
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file3"
                   >
-                    {userInfo3.filepreview != null ? (
+                    {previewsource3 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo3.filepreview}
+                          src={previewsource3}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -813,7 +945,7 @@ export default function Modifproduct({
                     ) : picture3 != null ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={pic1}
+                          src={picture3}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -844,7 +976,7 @@ export default function Modifproduct({
                         </svg>
                       </div>
                     )}
-                    {!userInfo3.filepreview && picture3 == null && (
+                    {!previewsource3 && picture3 == null && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -852,7 +984,9 @@ export default function Modifproduct({
                     <input
                       type="file"
                       id="file3"
-                      onChange={handleInputChange3}
+                      onChange={handlesetimage3}
+                      // onChange={handleInputChange}
+                      value={fileinputstate3}
                     />
                   </label>
                 </div>
@@ -861,16 +995,16 @@ export default function Modifproduct({
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo4.filepreview && picture4 == null
+                      !previewsource4 && picture4 == null
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file4"
                   >
-                    {userInfo4.filepreview != null ? (
+                    {previewsource4 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo4.filepreview}
+                          src={previewsource4}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -879,7 +1013,7 @@ export default function Modifproduct({
                     ) : picture4 != null ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={pic1}
+                          src={picture4}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -910,7 +1044,7 @@ export default function Modifproduct({
                         </svg>
                       </div>
                     )}
-                    {!userInfo4.filepreview && picture4 == null && (
+                    {!previewsource4 && picture4 == null && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -918,23 +1052,25 @@ export default function Modifproduct({
                     <input
                       type="file"
                       id="file4"
-                      onChange={handleInputChange4}
+                      onChange={handlesetimage4}
+                      // onChange={handleInputChange}
+                      value={fileinputstate4}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo5.filepreview && picture5 == null
+                      !previewsource5 && picture5 == null
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file5"
                   >
-                    {userInfo5.filepreview != null ? (
+                    {previewsource5 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo5.filepreview}
+                          src={previewsource5}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -943,7 +1079,7 @@ export default function Modifproduct({
                     ) : picture5 != null ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={pic1}
+                          src={picture5}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -974,7 +1110,7 @@ export default function Modifproduct({
                         </svg>
                       </div>
                     )}
-                    {!userInfo5.filepreview && picture5 == null && (
+                    {!previewsource5 && picture5 == null && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -982,23 +1118,25 @@ export default function Modifproduct({
                     <input
                       type="file"
                       id="file5"
-                      onChange={handleInputChange5}
+                      onChange={handlesetimage5}
+                      // onChange={handleInputChange}
+                      value={fileinputstate5}
                     />
                   </label>
                 </div>
                 <div className="w-full md:w-1/3">
                   <label
                     className={`${
-                      !userInfo6.filepreview && picture6 == null
+                      !previewsource6 && picture6 == null
                         ? "custum-file-upload"
                         : "custum-file-uploadd"
                     }`}
                     htmlFor="file6"
                   >
-                    {userInfo6.filepreview != null ? (
+                    {previewsource6 != "" ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={userInfo6.filepreview}
+                          src={previewsource6}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -1007,7 +1145,7 @@ export default function Modifproduct({
                     ) : picture6 != null ? (
                       <div className="relative w-full h-full">
                         <Image
-                          src={pic1}
+                          src={picture6}
                           alt="sjf"
                           fill
                           className="object-cover rounded-xl"
@@ -1038,7 +1176,7 @@ export default function Modifproduct({
                         </svg>
                       </div>
                     )}
-                    {!userInfo6.filepreview && picture6 == null && (
+                    {!previewsource6 && picture6 == null && (
                       <div className="text">
                         <span>Click to upload image</span>
                       </div>
@@ -1046,7 +1184,9 @@ export default function Modifproduct({
                     <input
                       type="file"
                       id="file6"
-                      onChange={handleInputChange6}
+                      onChange={handlesetimage6}
+                      // onChange={handleInputChange}
+                      value={fileinputstate6}
                     />
                   </label>
                 </div>

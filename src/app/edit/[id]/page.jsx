@@ -60,30 +60,11 @@ export default function page({ params }) {
 
   return (
     <>
-      {det.map((data, i) => {
-        return (
-          <Modifproduct
-            key={i}
-            id={data.id}
-            name={data.name}
-            descriptions={data.description}
-            discount_types={data.discount_type}
-            purchase_price={data.purchase_price}
-            selling_price={data.selling_price}
-            stocks={data.stock}
-            categorieids={data.id_category}
-            souscategorieids={data.id_sub_category}
-            sous_soucategorieids={data.id_sub_sub_category}
-            picture1={data.picture1}
-            picture2={data.picture2}
-            picture3={data.picture3}
-            picture4={data.picture4}
-            picture5={data.picture5}
-            picture6={data.picture6}
-            discount_values={data.discount_value}
-          />
-        );
-      })}
+      {/* {det.map((data, i) => {
+        return ( */}
+      <Modifproduct ids={id} />
+      {/* ); 
+   })}*/}
     </>
   );
 }

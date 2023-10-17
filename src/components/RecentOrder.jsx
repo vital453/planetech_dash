@@ -5,20 +5,8 @@ import {
   recupcommands,
   recupcommands_validation,
 } from "@/redux/features/productSlice";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBBadge,
-  MDBTable,
-  MDBTableHead,
-  MDBTableBody,
-} from "mdb-react-ui-kit";
-import CurrencyFormat from "react-currency-format";
+
+// import CurrencyFormat from "react-currency-format";
 import Axios from "axios";
 import DataTable from "react-data-table-component";
 import { useDispatch, useSelector } from "react-redux";
@@ -30,6 +18,13 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import Modal from "react-modal";
 import { IoIosCloseCircle } from "react-icons/io";
+import { formatPrice } from "./Utilscamp";
+import {
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  RadioGroup,
+} from "@mui/material";
 
 const customStyles = {
   content: {
@@ -67,26 +62,29 @@ export default function RecentOrder() {
   }
 
   const get_commands = () => {
-    Axios.get("https://back-planetech.onrender.com/get_commands", {}).then((response) => {
-      if (response.data[0]) {
-        console.log(response.data);
-        dispatch(recupcommands(response.data));
-      }
-    });
-  };
-  const get_commands_validation = () => {
-    Axios.get("https://back-planetech.onrender.com/get_commands_validation", {}).then(
+    Axios.get("https://back-planetech.onrender.com/get_commands", {}).then(
       (response) => {
         if (response.data[0]) {
           console.log(response.data);
-          const result = response.data.filter((it) => {
-            return it.status_id_command < 3;
-          });
-          setfiltered(result);
-          dispatch(recupcommands_validation(result));
+          dispatch(recupcommands(response.data));
         }
       }
     );
+  };
+  const get_commands_validation = () => {
+    Axios.get(
+      "https://back-planetech.onrender.com/get_commands_validation",
+      {}
+    ).then((response) => {
+      if (response.data[0]) {
+        console.log(response.data);
+        const result = response.data.filter((it) => {
+          return it.status_id_command < 3;
+        });
+        setfiltered(result);
+        dispatch(recupcommands_validation(result));
+      }
+    });
   };
 
   useEffect(() => {
@@ -153,13 +151,7 @@ export default function RecentOrder() {
             setinvoice(row.invoice);
           }}
         >
-          <CurrencyFormat
-            value={row.total_price === 0 ? 0 : row.total_price}
-            displayType={"text"}
-            thousandSeparator={true}
-            suffix={" FCFA"}
-            renderText={(value) => <span>{value}</span>}
-          />
+          {row.total_price === 0 ? 0 : formatPrice(row.total_price)}
         </span>
       ),
     },
@@ -215,6 +207,53 @@ export default function RecentOrder() {
       ),
     },
   ];
+  const colums1 = [
+    {
+      name: "Product Image",
+      selector: (row) => (
+        <div className="d-flex align-items-center">
+          <img
+            src={row.picture}
+            // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+            alt=""
+            style={{
+              width: "45px",
+              height: "45px",
+            }}
+            className="rounded-circle"
+          />
+          {/* <div className="ms-3">
+          <p className="fw-bold mb-1">John Doe</p>
+          <p className="text-muted mb-0">
+            john.doe@gmail.com
+          </p>
+        </div> */}
+        </div>
+      ),
+    },
+    {
+      name: "Nom",
+      selector: (row) => <p className="fw-normal mb-1">{row.product_name}</p>,
+    },
+    {
+      name: "Quantite",
+      selector: (row) => (
+        <span className="font-bold">{row.product_quantity}</span>
+      ),
+    },
+    {
+      name: "Montant",
+      selector: (row) => (
+        <span>{row.unite_price === 0 ? 0 : formatPrice(row.unite_price)}</span>
+      ),
+    },
+    {
+      name: "Total",
+      selector: (row) => (
+        <span>{row.total_price === 0 ? 0 : formatPrice(row.total_price)}</span>
+      ),
+    },
+  ];
   useEffect(() => {
     get_commands_validation();
     get_commands();
@@ -237,6 +276,33 @@ export default function RecentOrder() {
             </button>
             <div className="flex w-full">
               <div>
+                {/* <div className="my-2">
+                  <FormControl>
+                    <FormLabel id="demo-row-radio-buttons-group-label">
+                      Status de la commmande
+                    </FormLabel>
+                    <RadioGroup
+                      row
+                      aria-labelledby="demo-row-radio-buttons-group-label"
+                      name="row-radio-buttons-group"
+                      defaultValue={status1}
+                      onChange={(e) => {
+                        setstatus1(e.target.value);
+                      }}
+                    >
+                      {status_commade.map((data, i) => {
+                        return (
+                          <FormControlLabel
+                            key={i}
+                            value={data.id}
+                            control={<Radio />}
+                            label={data.libeller}
+                          />
+                        );
+                      })}
+                     
+                  </FormControl>
+                </div> */}
                 <Accordion>
                   <AccordionSummary
                     expandIcon={<ExpandMoreIcon />}
@@ -247,87 +313,67 @@ export default function RecentOrder() {
                   </AccordionSummary>
                   <AccordionDetails>
                     <div className="w-full mt-10">
-                      <MDBTable align="middle">
-                        <MDBTableHead>
-                          <tr>
-                            <th scope="col">Product Image</th>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Prix</th>
-                            <th scope="col">Quantité</th>
-                            <th scope="col">Total</th>
-                          </tr>
-                        </MDBTableHead>
-                        <MDBTableBody>
-                          {histo_command[0] &&
-                            histo_command
-                              .filter((t) => t.invoice == invoice)
-                              .map((data, i) => {
-                                return (
-                                  <tr key={i}>
-                                    <td>
-                                      <div className="d-flex align-items-center">
-                                        <img
-                                          src={data.picture}
-                                          // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                                          alt=""
-                                          style={{
-                                            width: "45px",
-                                            height: "45px",
-                                          }}
-                                          className="rounded-circle"
-                                        />
-                                      </div>
-                                    </td>
-                                    <td>
-                                      <p className="fw-normal mb-1">
-                                        {data.product_name}
-                                      </p>
-                                    </td>
-                                    <td>
-                                      <CurrencyFormat
-                                        value={
-                                          data.unite_price === 0
-                                            ? 0
-                                            : data.unite_price
-                                        }
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                        suffix={" FCFA"}
-                                        renderText={(value) => (
-                                          <span>{value}</span>
-                                        )}
-                                      />
-                                    </td>
-                                    <td>
-                                      <span className="font-bold">
-                                        {data.stock}
-                                      </span>
-                                    </td>
-                                    <td>
-                                      <CurrencyFormat
-                                        value={
-                                          data.total_price === 0
-                                            ? 0
-                                            : data.total_price
-                                        }
-                                        displayType={"text"}
-                                        thousandSeparator={true}
-                                        suffix={" FCFA"}
-                                        renderText={(value) => (
-                                          <span className="text-xl">
-                                            {value}
-                                          </span>
-                                        )}
-                                      />
-                                    </td>
-                                  </tr>
-                                );
-                              })}
-                        </MDBTableBody>
-                      </MDBTable>
+                      <DataTable
+                        data={histo_command.filter((t) => t.invoice == invoice)}
+                        columns={colums1}
+                        pagination
+                        selectableRows
+                        fixedHeader
+                        selectableRowsHighlight
+                        highlightOnHover
+                        subHeader
+                        // subHeaderComponent={
+                        //   <input
+                        //     type="text"
+                        //     className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+                        //     placeholder="Rechercher un produit"
+                        //     value={search}
+                        //     onChange={(e) => {
+                        //       setsearch(e.target.value);
+                        //     }}
+                        //     // onChange={(e) => setserach(e.target.value)}
+                        //     // value={search}
+                        //   />
+                        // }
+                      />
                     </div>
                   </AccordionDetails>
                 </Accordion>
+                {/* <div className="w-full flex justify-end items-end my-4">
+                  {progress ? (
+                    <>
+                      <div>
+                        <div className="progress-container">
+                          <div
+                            className="progress-barrrs"
+                            style={{ width: `${progressWidth}%` }}
+                          ></div>
+                        </div>
+                        <div className="flex items-center justify-center text-xl text-neutral-800 mt-4">
+                          <span className="ml-0">Chargement des données</span>
+                          <div class="ml-3 dot-spinner">
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                            <div class="dot-spinner__dot"></div>
+                          </div>
+                        </div>
+                      </div>
+                    </>
+                  ) : (
+                    <Button
+                      color="green"
+                      // onClick={() => dispatch(vider())}
+                      onClick={() => majstatut(status1)}
+                    >
+                      Mettre à jour le status
+                    </Button>
+                  )}
+                </div> */}
               </div>
             </div>
           </div>

@@ -59,44 +59,68 @@ export default function Changepan({ product_quantity, Stock, id, prix_unite }) {
         <Toaster />
       </div>{" "}
       {change ? (
-        <div className="flex justify-center items-center space-y-0 space-x-2">
-          <div className="justify-center items-center flex space-x-4">
-            <Button
-              className=""
+        <div className="w-full flex justify-between items-center space-y-0 space-x-2">
+          <div className="justify-between items-center flex space-x-3">
+            <div
+              className="px-2 py-2 rounded-md bg-black text-white text-xl"
               onClick={() => {
                 decrem();
               }}
             >
               -
-            </Button>
+            </div>
+            {/* <Button
+              className=""
+              onClick={() => {
+                decrem();
+              }}
+            >
+             
+            </Button> */}
 
             <input
               type="text"
-              className="px-4 py-2 w-16 rounded-xl outline-none "
+              className="px-4 py-2 w-24 rounded-xl outline-none "
               value={quantite}
               onChange={(e) => {
                 setQuantite(e.target.value);
               }}
             />
-            <Button
+            <div
+              className="px-2 py-2 rounded-md bg-black text-white text-xl"
+              onClick={() => {
+                increm();
+              }}
+            >
+              +
+            </div>
+            {/* <Button
               className=""
               onClick={() => {
                 increm();
               }}
             >
               +
-            </Button>
+            </Button> */}
           </div>
 
           <div className="flex items-center justify-center space-x-3">
-            <Button
+            <div
+              className="px-2 py-2 rounded-md text-white bg-green-500 text-lg cursor-pointer"
+              onClick={() => {
+                misajour();
+              }}
+            >
+              <AiFillCheckCircle />
+            </div>
+            {/* <Button
               className="bg-green-500 text-lg"
               onClick={() => {
                 misajour();
               }}
             >
               <AiFillCheckCircle />
-            </Button>
+            </Button> */}
 
             {/* <Button
             className="bg-red-500 text-lg"
@@ -109,7 +133,7 @@ export default function Changepan({ product_quantity, Stock, id, prix_unite }) {
           </div>
         </div>
       ) : (
-        <div className="flex justify-between items-center">
+        <div className="w-full flex justify-between space-x-20 items-center">
           <span className="font-bold">{product_quantity}</span>
           <FaRegEdit
             className="text-green-600 text-xl cursor-pointer"

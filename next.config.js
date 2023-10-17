@@ -4,10 +4,10 @@ const nextConfig = {
   //    domains:['C:/Users/Vital/planetech_project/back_planetech/uploads/']
   //   },
   images: {
-    // domains: ['C:/Users/Vital/planetech_project/back_planetech/uploads/'],
     domains: [
+      "res.cloudinary.com",
       "localhost",
-      "C:/Users/Vital/planetech_project/back_planetech/uploads/",
+      "C:/Users/Vital/planetech_project/back_planetech/uploads",
     ],
   },
 };

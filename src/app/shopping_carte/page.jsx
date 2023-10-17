@@ -2,21 +2,9 @@
 import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
-import {
-  MDBBtn,
-  MDBModal,
-  MDBModalDialog,
-  MDBModalContent,
-  MDBModalHeader,
-  MDBModalTitle,
-  MDBModalBody,
-  MDBBadge,
-  MDBTable,
-  MDBTableHead,
-  MDBTableBody,
-} from "mdb-react-ui-kit";
+//
 import Axios from "axios";
-import CurrencyFormat from "react-currency-format";
+// import CurrencyFormat from "react-currency-format";
 import { Button } from "@material-tailwind/react";
 import { useDispatch, useSelector } from "react-redux";
 import { deletepan, recupPan, vider } from "@/redux/features/panieerSlice";
@@ -31,6 +19,8 @@ import {
   addKkiapayListener,
   removeKkiapayListener,
 } from "kkiapay";
+import { formatPrice } from "../../components/Utilscamp";
+import DataTable from "react-data-table-component";
 
 export default function page() {
   const dispatch = useDispatch();
@@ -89,13 +79,15 @@ export default function page() {
     );
   };
   const get_product = () => {
-    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
-      if (response.data[0]) {
-        console.log(response.data);
-        dispatch(recupProduct(response.data));
-        // localStorage.setItem("change_version", "non");
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupProduct(response.data));
+          // localStorage.setItem("change_version", "non");
+        }
       }
-    });
+    );
   };
 
   const envoi1 = () => {
@@ -166,12 +158,14 @@ export default function page() {
   };
 
   const get_caisse = () => {
-    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then((response) => {
-      if (response.data[0]) {
-        console.log(response.data);
-        dispatch(recupcaisse(response.data[0].caisse));
+    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupcaisse(response.data[0].caisse));
+        }
       }
-    });
+    );
   };
 
   const envoi3 = async (invoices) => {
@@ -260,6 +254,89 @@ export default function page() {
     setresponse(response);
   }
 
+  const colums1 = [
+    {
+      name: "Product Image",
+      selector: (row) => (
+        <div className="d-flex align-items-center">
+          <img
+            src={row.picture}
+            // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+            alt=""
+            style={{
+              width: "45px",
+              height: "45px",
+            }}
+            className="rounded-circle"
+          />
+          {/* <div className="ms-3">
+          <p className="fw-bold mb-1">John Doe</p>
+          <p className="text-muted mb-0">
+            john.doe@gmail.com
+          </p>
+        </div> */}
+        </div>
+      ),
+    },
+    {
+      name: "Nom",
+      selector: (row) => <p className="fw-normal mb-1">{row.product_name}</p>,
+    },
+    {
+      name: "Quantite",
+      selector: (row) => (
+        <Changepan
+          className="w-full"
+          product_quantity={row.product_quantity}
+          Stock={row.stock}
+          id={row.id}
+          prix_unite={row.unite_price}
+        />
+        // <span className="font-bold">{row.product_quantity}</span>
+      ),
+    },
+    {
+      name: "Montant",
+      selector: (row) => (
+        <span>{row.unite_price === 0 ? 0 : formatPrice(row.unite_price)}</span>
+      ),
+    },
+    {
+      name: "Total",
+      selector: (row) => (
+        <span>{row.total_price === 0 ? 0 : formatPrice(row.total_price)}</span>
+      ),
+    },
+  ];
+  const colums2 = [
+    {
+      name: "TOTAL",
+      selector: (
+        <div className="w-full justify-center items-center flex">
+          <p className="mb-1 font-bold">Prix hors taxe</p>
+
+          <p className="mb-1 font-bold">Quantité total</p>
+
+          <p className="mb-1 font-bold">Prix total</p>
+        </div>
+      ),
+    },
+    {
+      name: "Prix",
+      selector: (
+        <div className="w-full justify-center items-center flex">
+          <p className="fw-normal mb-1">
+            {totalprix === 0 ? 0 : formatPrice(totalprix)}
+          </p>
+          <p className="fw-normal mb-1">{totalquant}</p>
+          <p className="fw-normal mb-1">
+            {totalprix === 0 ? 0 : formatPrice(totalprix)}
+          </p>
+        </div>
+      ),
+    },
+  ];
+
   useEffect(() => {
     addKkiapayListener("success", successHandler);
     return () => {
@@ -298,7 +375,32 @@ export default function page() {
         <Toaster />
       </div>
       <div className="w-full mt-10">
-        <MDBTable align="middle">
+        {panier[0] && (
+          <DataTable
+            data={panier}
+            columns={colums1}
+            pagination
+            selectableRows
+            fixedHeader
+            selectableRowsHighlight
+            highlightOnHover
+            subHeader
+            subHeaderComponent={
+              <input
+                type="text"
+                className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+                placeholder="Rechercher une commande"
+                // value={search}
+                // onChange={(e) => {
+                //   setsearch(e.target.value);
+                // }}
+                // onChange={(e) => setserach(e.target.value)}
+                // value={search}
+              />
+            }
+          />
+        )}
+        {/* <MDBTable align="middle">
           <MDBTableHead>
             <tr>
               <th scope="col">Product Image</th>
@@ -309,73 +411,100 @@ export default function page() {
             </tr>
           </MDBTableHead>
           <MDBTableBody>
-            {panier[0] &&
-              panier.map((data, i) => {
-                return (
-                  <tr key={i}>
-                    <td>
-                      <div className="d-flex align-items-center">
-                        <img
-                          src={data.picture1}
-                          // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-                          alt=""
-                          style={{ width: "45px", height: "45px" }}
-                          className="rounded-circle"
-                        />
-                        {/* <div className="ms-3">
-                    <p className="fw-bold mb-1">John Doe</p>
-                    <p className="text-muted mb-0">
-                      john.doe@gmail.com
-                    </p>
-                  </div> */}
-                      </div>
-                    </td>
-                    <td>
-                      <p className="fw-normal mb-1">{data.product_name}</p>
-                    </td>
-                    <td>
-                      <CurrencyFormat
-                        value={data.unite_price === 0 ? 0 : data.unite_price}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        suffix={" FCFA"}
-                        renderText={(value) => <span>{value}</span>}
-                      />
-                      {/* <MDBBadge color="success" pill>
-                      Active
-                    </MDBBadge> */}
-                    </td>
-                    <td>
-                      <Changepan
-                        product_quantity={data.product_quantity}
-                        Stock={data.stock}
-                        id={data.id}
-                        prix_unite={data.unite_price}
-                      />
-                    </td>
-                    <td>
-                      <CurrencyFormat
-                        value={data.total_price === 0 ? 0 : data.total_price}
-                        displayType={"text"}
-                        thousandSeparator={true}
-                        suffix={" FCFA"}
-                        renderText={(value) => (
-                          <span className="text-xl">{value}</span>
-                        )}
-                      />
-
-                      {/* <MDBBtn color="link" rounded size="sm">
-                      Edit
-                    </MDBBtn> */}
-                    </td>
-                  </tr>
-                );
-              })}
+            {   panier.map((data, i) => {
+                 return (
+                   <tr key={i}>
+                     <td>
+                       <div className="d-flex align-items-center">
+                         <img
+                           src={data.picture1}
+                            src="https:mdbootstrap.com/img/new/avatars/8.jpg"
+                           alt=""
+                           style={{ width: "45px", height: "45px" }}
+                           className="rounded-circle"
+                         />
+                       
+                       </div>
+                     </td>
+                     <td>
+                       <p className="fw-normal mb-1">{data.product_name}</p>
+                     </td>
+                     <td>
+                       <span>
+                         {data.unite_price === 0
+                           ? 0
+                           : formatPrice(data.unite_price)}
+                       </span>
+                     </td>
+                     <td>
+                      
+                     </td>
+                     <td>
+                       <span>
+                         {data.total_price === 0
+                           ? 0
+                           : formatPrice(data.total_price)}
+                       </span>
+                     </td>
+                   </tr>
+                 );})}
           </MDBTableBody>
-        </MDBTable>
+        </MDBTable> */}
       </div>
       <div className="w-full md:px-96 flex justify-center items-center ">
-        <MDBTable align="middle">
+        {panier[0] && (
+          <div className="w-full flex-col flex justify-center items-center">
+            <div className="w-full justify-center items-center flex flex-col mt-4">
+              <div className="w-full justify-between items-center flex mb-4">
+                <p className="mb-1 font-bold">Prix hors taxe</p>
+                <p className="fw-normal mb-1">
+                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                </p>
+              </div>
+              <hr className="border-2 border-gray-600 w-full" />
+            </div>
+            <div className="w-full justify-center items-center flex flex-col mt-4">
+              <div className="w-full justify-between items-center flex mb-4">
+                <p className="mb-1 font-bold">Quantité total</p>
+                <p className="fw-normal mb-1">{totalquant}</p>
+              </div>
+              <hr className="border-2 border-gray-600 w-full" />
+            </div>
+            <div className="w-full justify-center items-center flex flex-col mt-4">
+              <div className="w-full justify-between items-center flex mb-4">
+                <p className="mb-1 font-bold">Prix total</p>
+                <p className="fw-normal mb-1">
+                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                </p>
+              </div>
+              <hr className="border-2 border-gray-600 w-full" />
+            </div>
+          </div>
+          // <DataTable
+          //   // data={panier}
+          //   columns={colums2}
+          //   pagination
+          //   selectableRows
+          //   fixedHeader
+          //   selectableRowsHighlight
+          //   highlightOnHover
+          //   subHeader
+          //   subHeaderComponent={
+          //     <input
+          //       type="text"
+          //       className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+          //       placeholder="Rechercher une commande"
+          //       // value={search}
+          //       // onChange={(e) => {
+          //       //   setsearch(e.target.value);
+          //       // }}
+          //       // onChange={(e) => setserach(e.target.value)}
+          //       // value={search}
+          //     />
+          //   }
+          // />
+        )}
+        {/* <MDBTable align="middle">
           <MDBTableHead>
             <tr>
               <th scope="col">TOTAL</th>
@@ -389,13 +518,7 @@ export default function page() {
               </td>
               <td>
                 <p className="fw-normal mb-1">
-                  <CurrencyFormat
-                    value={totalprix === 0 ? 0 : totalprix}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" FCFA"}
-                    renderText={(value) => <span>{value}</span>}
-                  />
+                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
                 </p>
               </td>
             </tr>
@@ -413,18 +536,13 @@ export default function page() {
               </td>
               <td>
                 <p className="fw-normal mb-1">
-                  <CurrencyFormat
-                    value={totalprix === 0 ? 0 : totalprix}
-                    displayType={"text"}
-                    thousandSeparator={true}
-                    suffix={" FCFA"}
-                    renderText={(value) => <span>{value}</span>}
-                  />
+                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                  
                 </p>
               </td>
             </tr>
           </MDBTableBody>
-        </MDBTable>
+        </MDBTable> */}
       </div>
       <div className="w-full justify-center items-center flex ">
         {progress ? (

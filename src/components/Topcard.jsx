@@ -3,19 +3,22 @@ import { recupcaisse } from "@/redux/features/productSlice";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Axios from "axios";
-import CurrencyFormat from "react-currency-format";
+import { formatPrice } from "./Utilscamp";
+// import CurrencyFormat from "react-currency-format";
 
 export default function Topcard() {
   let caisse = useSelector((state) => state.product.caisse);
   const dispatch = useDispatch();
 
   const get_caisse = () => {
-    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then((response) => {
-      if (response.data[0]) {
-        console.log(response.data);
-        dispatch(recupcaisse(response.data[0].caisse));
+    Axios.get("https://back-planetech.onrender.com/get_caisse", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupcaisse(response.data[0].caisse));
+        }
       }
-    });
+    );
   };
 
   useEffect(() => {
@@ -45,13 +48,7 @@ export default function Topcard() {
       <div className="bg-white flex justify-between w-full border p-4 rounded-lg">
         <div className="flex flex-col w-full pb-4">
           <p className="text-2xl font-bold">
-            <CurrencyFormat
-              value={caisse}
-              displayType={"text"}
-              thousandSeparator={true}
-              suffix={" FCFA"}
-              renderText={(value) => <span>{value}</span>}
-            />
+            <span>{caisse === 0 ? 0 : formatPrice(caisse)}</span>
           </p>
           <p className="text-gray-600">Caisse</p>
         </div>

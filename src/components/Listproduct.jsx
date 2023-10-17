@@ -10,7 +10,6 @@ import Axios from "axios";
 import { recupProduct } from "@/redux/features/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { settrigg } from "@/redux/features/TriggerSlice";
-import { pic, pic1 } from "@/assets/images";
 import Image from "next/image";
 
 export default function Listproduct() {
@@ -31,7 +30,7 @@ export default function Listproduct() {
   };
   useEffect(() => {
     get_product();
-  }, []);
+  }, [product]);
 
   return (
     <div className="w-full justify-start items-center space-y-4">
