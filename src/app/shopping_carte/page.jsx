@@ -255,7 +255,7 @@ export default function page() {
     setresponse(response);
   }
 
-  const colums1 = [
+  const colums1 = typeof window !== "undefined" && [
     {
       name: "Product Image",
       selector: (row) => (
@@ -315,34 +315,6 @@ export default function page() {
       name: "Total",
       selector: (row) => (
         <span>{row.total_price === 0 ? 0 : formatPrice(row.total_price)}</span>
-      ),
-    },
-  ];
-  const colums2 = [
-    {
-      name: "TOTAL",
-      selector: (
-        <div className="w-full justify-center items-center flex">
-          <p className="mb-1 font-bold">Prix hors taxe</p>
-
-          <p className="mb-1 font-bold">Quantité total</p>
-
-          <p className="mb-1 font-bold">Prix total</p>
-        </div>
-      ),
-    },
-    {
-      name: "Prix",
-      selector: (
-        <div className="w-full justify-center items-center flex">
-          <p className="fw-normal mb-1">
-            {totalprix === 0 ? 0 : formatPrice(totalprix)}
-          </p>
-          <p className="fw-normal mb-1">{totalquant}</p>
-          <p className="fw-normal mb-1">
-            {totalprix === 0 ? 0 : formatPrice(totalprix)}
-          </p>
-        </div>
       ),
     },
   ];
