@@ -77,7 +77,7 @@ export default function Addproduct() {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setpreviewsource(reader.result);
+      setpreviewsource2(reader.result);
     };
   };
   const handlesetimage3 = (e) => {

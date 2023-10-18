@@ -130,7 +130,7 @@ export default function Modifproduct({ ids }) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onloadend = () => {
-      setpreviewsource(reader.result);
+      setpreviewsource2(reader.result);
     };
   };
   const handlesetimage3 = (e) => {
@@ -519,45 +519,45 @@ export default function Modifproduct({ ids }) {
         setTimeout(() => {
           setCurrentStep(3);
         }, 1000);
-        console.log(ret.data[0].id);
-        if (userInfo.file.name) {
-          submit(id, 1, userInfo.file);
+        if (previewsource) {
+          submit(id, 1, previewsource);
         } else {
           setTimeout(() => {
             setCurrentStep(4);
           }, 1000);
         }
-        if (userInfo2.file.name) {
-          submit(id, 2, userInfo2.file);
+        if (previewsource2) {
+          console.log("est passer par ici");
+          submit(id, 2, previewsource2);
         } else {
           setTimeout(() => {
             setCurrentStep(5);
           }, 1000);
         }
 
-        if (userInfo3.file.name) {
-          submit(id, 3, userInfo3.file);
+        if (previewsource) {
+          submit(id, 3, previewsource3);
         } else {
           setTimeout(() => {
             setCurrentStep(6);
           }, 1000);
         }
-        if (userInfo4.file.name) {
-          submit(id, 4, userInfo4.file);
+        if (previewsource4) {
+          submit(id, 4, previewsource4);
         } else {
           setTimeout(() => {
             setCurrentStep(7);
           }, 1000);
         }
-        if (userInfo5.file.name) {
-          submit(id, 5, userInfo5.file);
+        if (previewsource5) {
+          submit(id, 5, previewsource5);
         } else {
           setTimeout(() => {
             setCurrentStep(8);
           }, 1000);
         }
-        if (userInfo6.file.name) {
-          submit(id, 6, userInfo6.file);
+        if (previewsource6) {
+          submit(id, 6, previewsource6);
         } else {
           setTimeout(() => {
             setCurrentStep(9);
@@ -622,7 +622,7 @@ export default function Modifproduct({ ids }) {
           <div className="flex flex-col justify-center items-center w-full md:flex-row md:w-full md:justify-between md:items-start space-y-4 md:space-y-0 md:space-x-4">
             <div className="w-full md:w-1/2 flex flex-col justify-center items-center space-y-4 md:space-y-10">
               <div className="flex flex-col justify-center items-start space-y-3 w-full">
-                <span>Nom {id}</span>
+                <span>Nom</span>
                 <input
                   type="text"
                   className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1"

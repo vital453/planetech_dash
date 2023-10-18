@@ -27,11 +27,11 @@ export default function Header({ title, user }) {
   const closeMenu = () => setIsMenuOpen(false);
 
   const profileMenuItems = [
-    {
-      label: "My Profile",
-      icon: FaUserCircle,
-      to: "/",
-    },
+    // {
+    //   label: "My Profile",
+    //   icon: FaUserCircle,
+    //   to: "/",
+    // },
     // {
     //   label: "Edit Profile",
     //   icon: Cog6ToothIcon,

@@ -34,13 +34,15 @@ export default function page() {
   const toggleShow = () => setOptSmModal(!optSmModal);
 
   const get_product = () => {
-    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
-      if (response.data[0]) {
-        console.log(response.data);
-        dispatch(recupProduct(response.data));
-        // localStorage.setItem("change_version", "non");
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupProduct(response.data));
+          // localStorage.setItem("change_version", "non");
+        }
       }
-    });
+    );
   };
   useEffect(() => {
     get_product();
@@ -64,10 +66,24 @@ export default function page() {
         </Link>
 
         <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {product[0] &&
-            product.map((data, i) => {
-              return <Card1 data={data} />;
-            })}
+          {product[0] ? (
+            <>
+              {product.map((data, i) => {
+                return <Card1 data={data} />;
+              })}
+            </>
+          ) : (
+            <div className="w-full justify-center items-center flex flex-col">
+              <div class="loading">
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+              </div>
+              <span>Chargement en cours</span>
+            </div>
+          )}
         </div>
       </div>
     </>

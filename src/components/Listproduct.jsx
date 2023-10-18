@@ -20,40 +20,57 @@ export default function Listproduct() {
   const trigg = useSelector((state) => state.trigger.trigg);
 
   const get_product = () => {
-    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then((response) => {
-      if (response.data[0]) {
-        console.log(response.data);
-        dispatch(recupProduct(response.data));
-        // localStorage.setItem("change_version", "non");
+    Axios.get("https://back-planetech.onrender.com/affiche_produit", {}).then(
+      (response) => {
+        if (response.data[0]) {
+          console.log(response.data);
+          dispatch(recupProduct(response.data));
+          // localStorage.setItem("change_version", "non");
+        }
       }
-    });
+    );
   };
   useEffect(() => {
     get_product();
   }, [product]);
 
   return (
-    <div className="w-full justify-start items-center space-y-4">
+    <div className="w-full justify-center items-center space-y-4">
       {!trigg && (
         <Button color="blue" onClick={() => dispatch(settrigg(true))}>
           {/* <Button color="blue" onClick={handleclick}> */}
           Ajouter un produit
         </Button>
       )}
-     
-      {trigg ? (
-        <>
-          <Addproduct />
-          <div className="h-10"></div>
-        </>
-      ) : (
-        <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {product[0] &&
-            product.map((data, i) => {
-              return <Card data={data}/>;
-            })}
-        </div>
-      )}
+      <div className=" w-full justify-center items-center">
+        {trigg ? (
+          <>
+            <Addproduct />
+            <div className="h-10"></div>
+          </>
+        ) : (
+          <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 justify-center items-center">
+            {product[0] ? (
+              <>
+                {product.map((data, i) => {
+                  return <Card data={data} />;
+                })}
+              </>
+            ) : (
+              <div className="w-full justify-center items-center flex flex-col">
+                <div class="loading">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <span>Chargement en cours</span>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
