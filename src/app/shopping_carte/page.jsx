@@ -368,217 +368,219 @@ export default function page() {
   useEffect(() => {
     getpan();
   }, [panier]);
-
-  return (
-    <div className="px-4 md:px-60 min-h-screen space-y-8">
-      <div>
-        <Toaster />
-      </div>
-      <div className="w-full mt-10">
-        {panier[0] && (
-          <DataTable
-            data={panier}
-            columns={colums1}
-            pagination
-            selectableRows
-            fixedHeader
-            selectableRowsHighlight
-            highlightOnHover
-            subHeader
-            subHeaderComponent={
-              <input
-                type="text"
-                className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
-                placeholder="Rechercher une commande"
-                // value={search}
-                // onChange={(e) => {
-                //   setsearch(e.target.value);
-                // }}
-                // onChange={(e) => setserach(e.target.value)}
-                // value={search}
-              />
-            }
-          />
-        )}
-        {/* <MDBTable align="middle">
-          <MDBTableHead>
-            <tr>
-              <th scope="col">Product Image</th>
-              <th scope="col">Nom</th>
-              <th scope="col">Prix</th>
-              <th scope="col">Quantité</th>
-              <th scope="col">Total</th>
-            </tr>
-          </MDBTableHead>
-          <MDBTableBody>
-            {   panier.map((data, i) => {
-                 return (
-                   <tr key={i}>
-                     <td>
-                       <div className="d-flex align-items-center">
-                         <img
-                           src={data.picture1}
-                            src="https:mdbootstrap.com/img/new/avatars/8.jpg"
-                           alt=""
-                           style={{ width: "45px", height: "45px" }}
-                           className="rounded-circle"
-                         />
-                       
-                       </div>
-                     </td>
-                     <td>
-                       <p className="fw-normal mb-1">{data.product_name}</p>
-                     </td>
-                     <td>
-                       <span>
-                         {data.unite_price === 0
-                           ? 0
-                           : formatPrice(data.unite_price)}
-                       </span>
-                     </td>
-                     <td>
-                      
-                     </td>
-                     <td>
-                       <span>
-                         {data.total_price === 0
-                           ? 0
-                           : formatPrice(data.total_price)}
-                       </span>
-                     </td>
-                   </tr>
-                 );})}
-          </MDBTableBody>
-        </MDBTable> */}
-      </div>
-      <div className="w-full md:px-96 flex justify-center items-center ">
-        {panier[0] && (
-          <div className="w-full flex-col flex justify-center items-center">
-            <div className="w-full justify-center items-center flex flex-col mt-4">
-              <div className="w-full justify-between items-center flex mb-4">
-                <p className="mb-1 font-bold">Prix hors taxe</p>
-                <p className="fw-normal mb-1">
-                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
-                </p>
+  if (typeof window !== "undefined") {
+    // Votre code qui dépend de l'interface utilisateur du navigateur
+    return (
+      <div className="px-4 md:px-60 min-h-screen space-y-8">
+        <div>
+          <Toaster />
+        </div>
+        <div className="w-full mt-10">
+          {panier[0] && (
+            <DataTable
+              data={panier}
+              columns={colums1}
+              pagination
+              selectableRows
+              fixedHeader
+              selectableRowsHighlight
+              highlightOnHover
+              subHeader
+              subHeaderComponent={
+                <input
+                  type="text"
+                  className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+                  placeholder="Rechercher une commande"
+                  // value={search}
+                  // onChange={(e) => {
+                  //   setsearch(e.target.value);
+                  // }}
+                  // onChange={(e) => setserach(e.target.value)}
+                  // value={search}
+                />
+              }
+            />
+          )}
+          {/* <MDBTable align="middle">
+            <MDBTableHead>
+              <tr>
+                <th scope="col">Product Image</th>
+                <th scope="col">Nom</th>
+                <th scope="col">Prix</th>
+                <th scope="col">Quantité</th>
+                <th scope="col">Total</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
+              {   panier.map((data, i) => {
+                   return (
+                     <tr key={i}>
+                       <td>
+                         <div className="d-flex align-items-center">
+                           <img
+                             src={data.picture1}
+                              src="https:mdbootstrap.com/img/new/avatars/8.jpg"
+                             alt=""
+                             style={{ width: "45px", height: "45px" }}
+                             className="rounded-circle"
+                           />
+                         
+                         </div>
+                       </td>
+                       <td>
+                         <p className="fw-normal mb-1">{data.product_name}</p>
+                       </td>
+                       <td>
+                         <span>
+                           {data.unite_price === 0
+                             ? 0
+                             : formatPrice(data.unite_price)}
+                         </span>
+                       </td>
+                       <td>
+                        
+                       </td>
+                       <td>
+                         <span>
+                           {data.total_price === 0
+                             ? 0
+                             : formatPrice(data.total_price)}
+                         </span>
+                       </td>
+                     </tr>
+                   );})}
+            </MDBTableBody>
+          </MDBTable> */}
+        </div>
+        <div className="w-full md:px-96 flex justify-center items-center ">
+          {panier[0] && (
+            <div className="w-full flex-col flex justify-center items-center">
+              <div className="w-full justify-center items-center flex flex-col mt-4">
+                <div className="w-full justify-between items-center flex mb-4">
+                  <p className="mb-1 font-bold">Prix hors taxe</p>
+                  <p className="fw-normal mb-1">
+                    {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                  </p>
+                </div>
+                <hr className="border-2 border-gray-600 w-full" />
               </div>
-              <hr className="border-2 border-gray-600 w-full" />
+              <div className="w-full justify-center items-center flex flex-col mt-4">
+                <div className="w-full justify-between items-center flex mb-4">
+                  <p className="mb-1 font-bold">Quantité total</p>
+                  <p className="fw-normal mb-1">{totalquant}</p>
+                </div>
+                <hr className="border-2 border-gray-600 w-full" />
+              </div>
+              <div className="w-full justify-center items-center flex flex-col mt-4">
+                <div className="w-full justify-between items-center flex mb-4">
+                  <p className="mb-1 font-bold">Prix total</p>
+                  <p className="fw-normal mb-1">
+                    {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                  </p>
+                </div>
+                <hr className="border-2 border-gray-600 w-full" />
+              </div>
             </div>
-            <div className="w-full justify-center items-center flex flex-col mt-4">
-              <div className="w-full justify-between items-center flex mb-4">
-                <p className="mb-1 font-bold">Quantité total</p>
-                <p className="fw-normal mb-1">{totalquant}</p>
-              </div>
-              <hr className="border-2 border-gray-600 w-full" />
-            </div>
-            <div className="w-full justify-center items-center flex flex-col mt-4">
-              <div className="w-full justify-between items-center flex mb-4">
-                <p className="mb-1 font-bold">Prix total</p>
-                <p className="fw-normal mb-1">
-                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
-                </p>
-              </div>
-              <hr className="border-2 border-gray-600 w-full" />
-            </div>
-          </div>
-          // <DataTable
-          //   // data={panier}
-          //   columns={colums2}
-          //   pagination
-          //   selectableRows
-          //   fixedHeader
-          //   selectableRowsHighlight
-          //   highlightOnHover
-          //   subHeader
-          //   subHeaderComponent={
-          //     <input
-          //       type="text"
-          //       className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
-          //       placeholder="Rechercher une commande"
-          //       // value={search}
-          //       // onChange={(e) => {
-          //       //   setsearch(e.target.value);
-          //       // }}
-          //       // onChange={(e) => setserach(e.target.value)}
-          //       // value={search}
-          //     />
-          //   }
-          // />
-        )}
-        {/* <MDBTable align="middle">
-          <MDBTableHead>
-            <tr>
-              <th scope="col">TOTAL</th>
-              <th scope="col">Prix</th>
-            </tr>
-          </MDBTableHead>
-          <MDBTableBody>
-            <tr>
-              <td>
-                <p className="mb-1 font-bold">Prix hors taxe</p>
-              </td>
-              <td>
-                <p className="fw-normal mb-1">
-                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p className="mb-1 font-bold">Quantité total</p>
-              </td>
-              <td>
-                <p className="fw-normal mb-1">{totalquant}</p>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <p className="mb-1 font-bold">Prix total</p>
-              </td>
-              <td>
-                <p className="fw-normal mb-1">
-                  {totalprix === 0 ? 0 : formatPrice(totalprix)}
-                  
-                </p>
-              </td>
-            </tr>
-          </MDBTableBody>
-        </MDBTable> */}
-      </div>
-      <div className="w-full justify-center items-center flex ">
-        {progress ? (
-          <>
-            <div>
-              <div className="progress-container">
-                <div
-                  className="progress-barrrs"
-                  style={{ width: `${progressWidth}%` }}
-                ></div>
-              </div>
-              <div className="flex items-center justify-center text-xl text-neutral-800 mt-4">
-                <span className="ml-0">Chargement des données</span>
-                <div class="ml-3 dot-spinner">
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
-                  <div class="dot-spinner__dot"></div>
+            // <DataTable
+            //   // data={panier}
+            //   columns={colums2}
+            //   pagination
+            //   selectableRows
+            //   fixedHeader
+            //   selectableRowsHighlight
+            //   highlightOnHover
+            //   subHeader
+            //   subHeaderComponent={
+            //     <input
+            //       type="text"
+            //       className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+            //       placeholder="Rechercher une commande"
+            //       // value={search}
+            //       // onChange={(e) => {
+            //       //   setsearch(e.target.value);
+            //       // }}
+            //       // onChange={(e) => setserach(e.target.value)}
+            //       // value={search}
+            //     />
+            //   }
+            // />
+          )}
+          {/* <MDBTable align="middle">
+            <MDBTableHead>
+              <tr>
+                <th scope="col">TOTAL</th>
+                <th scope="col">Prix</th>
+              </tr>
+            </MDBTableHead>
+            <MDBTableBody>
+              <tr>
+                <td>
+                  <p className="mb-1 font-bold">Prix hors taxe</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">
+                    {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                  </p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className="mb-1 font-bold">Quantité total</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">{totalquant}</p>
+                </td>
+              </tr>
+              <tr>
+                <td>
+                  <p className="mb-1 font-bold">Prix total</p>
+                </td>
+                <td>
+                  <p className="fw-normal mb-1">
+                    {totalprix === 0 ? 0 : formatPrice(totalprix)}
+                    
+                  </p>
+                </td>
+              </tr>
+            </MDBTableBody>
+          </MDBTable> */}
+        </div>
+        <div className="w-full justify-center items-center flex ">
+          {progress ? (
+            <>
+              <div>
+                <div className="progress-container">
+                  <div
+                    className="progress-barrrs"
+                    style={{ width: `${progressWidth}%` }}
+                  ></div>
+                </div>
+                <div className="flex items-center justify-center text-xl text-neutral-800 mt-4">
+                  <span className="ml-0">Chargement des données</span>
+                  <div class="ml-3 dot-spinner">
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                    <div class="dot-spinner__dot"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </>
-        ) : (
-          <Button
-            color="green"
-            // onClick={() => dispatch(vider())}
-            onClick={() => envoi1()}
-          >
-            Proceder au paiement
-          </Button>
-        )}
+            </>
+          ) : (
+            <Button
+              color="green"
+              // onClick={() => dispatch(vider())}
+              onClick={() => envoi1()}
+            >
+              Proceder au paiement
+            </Button>
+          )}
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

@@ -551,172 +551,177 @@ export default function page() {
     console.log("lafa");
   }, []);
 
-  return (
-    <div className="w-full justify-start items-center space-y-4 py-4 px-4">
-      <div>
-        <Toaster />
-      </div>
-      <Header title={"Gestion des historiques"} user={session?.user} />
-      <div>
-        {/* <Modal
-                open={open}
-                onClose={handleClose}
-                aria-labelledby="modal-modal-title"
-                aria-describedby="modal-modal-description"
-              >
-                <Box sx={style}>
-                  <Typography id="modal-modal-title" variant="h6" component="h2">
-                    Text in a modal
-                  </Typography>
-                  <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                    Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
-                  </Typography>
-                </Box>
-              </Modal> */}
-        <Modal
-          isOpen={modalIsOpen}
-          onRequestClose={closeModal}
-          style={customStyles}
-          contentLabel="Example Modal"
-        >
-          <div className="flex flex-col w-full justify-start items-start space-y-4">
-            <button onClick={closeModal} className="text-2xl text-red-700">
-              <IoIosCloseCircle />
-            </button>
-            <div className="flex w-full">
-              <div>
-                <div className="my-2">
-                  <FormControl>
-                    <FormLabel id="demo-row-radio-buttons-group-label">
-                      Status de la commmande
-                    </FormLabel>
-                    <RadioGroup
-                      row
-                      aria-labelledby="demo-row-radio-buttons-group-label"
-                      name="row-radio-buttons-group"
-                      defaultValue={status1}
-                      onChange={(e) => {
-                        setstatus1(e.target.value);
-                      }}
+  if (typeof window !== "undefined") {
+    // Votre code qui dépend de l'interface utilisateur du navigateur
+    return (
+      <div className="w-full justify-start items-center space-y-4 py-4 px-4">
+        <div>
+          <Toaster />
+        </div>
+        <Header title={"Gestion des historiques"} user={session?.user} />
+        <div>
+          {/* <Modal
+                  open={open}
+                  onClose={handleClose}
+                  aria-labelledby="modal-modal-title"
+                  aria-describedby="modal-modal-description"
+                >
+                  <Box sx={style}>
+                    <Typography id="modal-modal-title" variant="h6" component="h2">
+                      Text in a modal
+                    </Typography>
+                    <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                      Duis mollis, est non commodo luctus, nisi erat porttitor ligula.
+                    </Typography>
+                  </Box>
+                </Modal> */}
+          <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={closeModal}
+            style={customStyles}
+            contentLabel="Example Modal"
+          >
+            <div className="flex flex-col w-full justify-start items-start space-y-4">
+              <button onClick={closeModal} className="text-2xl text-red-700">
+                <IoIosCloseCircle />
+              </button>
+              <div className="flex w-full">
+                <div>
+                  <div className="my-2">
+                    <FormControl>
+                      <FormLabel id="demo-row-radio-buttons-group-label">
+                        Status de la commmande
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="demo-row-radio-buttons-group-label"
+                        name="row-radio-buttons-group"
+                        defaultValue={status1}
+                        onChange={(e) => {
+                          setstatus1(e.target.value);
+                        }}
+                      >
+                        {status_commade.map((data, i) => {
+                          return (
+                            <FormControlLabel
+                              key={i}
+                              value={data.id}
+                              control={<Radio />}
+                              label={data.libeller}
+                            />
+                          );
+                        })}
+                        {/* <FormControlLabel
+                          value="disabled"
+                          disabled
+                          control={<Radio />}
+                          label="other"
+                        /> */}
+                      </RadioGroup>
+                    </FormControl>
+                  </div>
+                  <Accordion>
+                    <AccordionSummary
+                      expandIcon={<ExpandMoreIcon />}
+                      aria-controls="panel1a-content"
+                      id="panel1a-header"
                     >
-                      {status_commade.map((data, i) => {
-                        return (
-                          <FormControlLabel
-                            key={i}
-                            value={data.id}
-                            control={<Radio />}
-                            label={data.libeller}
-                          />
-                        );
-                      })}
-                      {/* <FormControlLabel
-                        value="disabled"
-                        disabled
-                        control={<Radio />}
-                        label="other"
-                      /> */}
-                    </RadioGroup>
-                  </FormControl>
-                </div>
-                <Accordion>
-                  <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
-                    aria-controls="panel1a-content"
-                    id="panel1a-header"
-                  >
-                    <Typography>Liste des produits de la commande</Typography>
-                  </AccordionSummary>
-                  <AccordionDetails>
-                    <div className="w-full mt-10">
-                      <DataTable
-                        data={histo_command.filter((t) => t.invoice == invoice)}
-                        columns={colums1}
-                        pagination
-                        selectableRows
-                        fixedHeader
-                        selectableRowsHighlight
-                        highlightOnHover
-                        subHeader
-                        subHeaderComponent={
-                          <input
-                            type="text"
-                            className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
-                            placeholder="Rechercher un produit"
-                            value={search}
-                            onChange={(e) => {
-                              setsearch(e.target.value);
-                            }}
-                            // onChange={(e) => setserach(e.target.value)}
-                            // value={search}
-                          />
-                        }
-                      />
-                    </div>
-                  </AccordionDetails>
-                </Accordion>
-                <div className="w-full flex justify-end items-end my-4">
-                  {progress ? (
-                    <>
-                      <div>
-                        <div className="progress-container">
-                          <div
-                            className="progress-barrrs"
-                            style={{ width: `${progressWidth}%` }}
-                          ></div>
-                        </div>
-                        <div className="flex items-center justify-center text-xl text-neutral-800 mt-4">
-                          <span className="ml-0">Chargement des données</span>
-                          <div class="ml-3 dot-spinner">
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
-                            <div class="dot-spinner__dot"></div>
+                      <Typography>Liste des produits de la commande</Typography>
+                    </AccordionSummary>
+                    <AccordionDetails>
+                      <div className="w-full mt-10">
+                        <DataTable
+                          data={histo_command.filter(
+                            (t) => t.invoice == invoice
+                          )}
+                          columns={colums1}
+                          pagination
+                          selectableRows
+                          fixedHeader
+                          selectableRowsHighlight
+                          highlightOnHover
+                          subHeader
+                          subHeaderComponent={
+                            <input
+                              type="text"
+                              className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+                              placeholder="Rechercher un produit"
+                              value={search}
+                              onChange={(e) => {
+                                setsearch(e.target.value);
+                              }}
+                              // onChange={(e) => setserach(e.target.value)}
+                              // value={search}
+                            />
+                          }
+                        />
+                      </div>
+                    </AccordionDetails>
+                  </Accordion>
+                  <div className="w-full flex justify-end items-end my-4">
+                    {progress ? (
+                      <>
+                        <div>
+                          <div className="progress-container">
+                            <div
+                              className="progress-barrrs"
+                              style={{ width: `${progressWidth}%` }}
+                            ></div>
+                          </div>
+                          <div className="flex items-center justify-center text-xl text-neutral-800 mt-4">
+                            <span className="ml-0">Chargement des données</span>
+                            <div class="ml-3 dot-spinner">
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                              <div class="dot-spinner__dot"></div>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </>
-                  ) : (
-                    <Button
-                      color="green"
-                      // onClick={() => dispatch(vider())}
-                      onClick={() => majstatut(status1)}
-                    >
-                      Mettre à jour le status
-                    </Button>
-                  )}
+                      </>
+                    ) : (
+                      <Button
+                        color="green"
+                        // onClick={() => dispatch(vider())}
+                        onClick={() => majstatut(status1)}
+                      >
+                        Mettre à jour le status
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </Modal>
-        <DataTable
-          data={filtered}
-          columns={colums}
-          pagination
-          selectableRows
-          fixedHeader
-          selectableRowsHighlight
-          highlightOnHover
-          subHeader
-          subHeaderComponent={
-            <input
-              type="text"
-              className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
-              placeholder="Rechercher une commande"
-              value={search}
-              onChange={(e) => {
-                setsearch(e.target.value);
-              }}
-              // onChange={(e) => setserach(e.target.value)}
-              // value={search}
-            />
-          }
-        />
+          </Modal>
+          <DataTable
+            data={filtered}
+            columns={colums}
+            pagination
+            selectableRows
+            fixedHeader
+            selectableRowsHighlight
+            highlightOnHover
+            subHeader
+            subHeaderComponent={
+              <input
+                type="text"
+                className="bg-white border-2 h-12 px-1 py-2 shadow-sm border-slate-300 placeholder-slate-400 focus:outline-none focus:border-sky-500 focus:ring-sky-500 block w-full rounded-md sm:text-sm focus:ring-1 my-3"
+                placeholder="Rechercher une commande"
+                value={search}
+                onChange={(e) => {
+                  setsearch(e.target.value);
+                }}
+                // onChange={(e) => setserach(e.target.value)}
+                // value={search}
+              />
+            }
+          />
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }

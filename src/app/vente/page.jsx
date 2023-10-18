@@ -50,42 +50,45 @@ export default function page() {
       dispatch(recupPan(JSON.parse(localStorage.getItem("panier"))));
     }
   }, []);
-  return (
-    <>
-      <div className="w-full justify-start items-center space-y-4 py-4 px-4">
-        <Header title={"Gestion des ventes"} user={session?.user} />
-        <Link href={"/shopping_carte"}>
-          <Button
-            color="blue"
-            // onClick={() => dispatch(vider())}
-            // onClick={toggleShow}
-          >
-            {/* <Button color="blue" onClick={handleclick}> */}
-            {panier.length === 0 ? "0" : panier.length} <HiShoppingCart />
-          </Button>
-        </Link>
+  if (typeof window !== "undefined") {
+    // Votre code qui dépend de l'interface utilisateur du navigateur
+    return (
+      <>
+        <div className="w-full justify-start items-center space-y-4 py-4 px-4">
+          <Header title={"Gestion des ventes"} user={session?.user} />
+          <Link href={"/shopping_carte"}>
+            <Button
+              color="blue"
+              // onClick={() => dispatch(vider())}
+              // onClick={toggleShow}
+            >
+              {/* <Button color="blue" onClick={handleclick}> */}
+              {panier.length === 0 ? "0" : panier.length} <HiShoppingCart />
+            </Button>
+          </Link>
 
-        <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-          {product[0] ? (
-            <>
-              {product.map((data, i) => {
-                return <Card1 data={data} />;
-              })}
-            </>
-          ) : (
-            <div className="w-full justify-center items-center flex flex-col">
-              <div class="loading">
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
-                <span></span>
+          <div className="w-full grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {product[0] ? (
+              <>
+                {product.map((data, i) => {
+                  return <Card1 data={data} />;
+                })}
+              </>
+            ) : (
+              <div className="w-full justify-center items-center flex flex-col">
+                <div class="loading">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
+                <span>Chargement en cours</span>
               </div>
-              <span>Chargement en cours</span>
-            </div>
-          )}
+            )}
+          </div>
         </div>
-      </div>
-    </>
-  );
+      </>
+    );
+  }
 }
