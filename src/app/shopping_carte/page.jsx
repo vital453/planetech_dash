@@ -21,6 +21,7 @@ import {
 } from "kkiapay";
 import { formatPrice } from "../../components/Utilscamp";
 import DataTable from "react-data-table-component";
+import Image from "next/image";
 
 export default function page() {
   const dispatch = useDispatch();
@@ -258,24 +259,33 @@ export default function page() {
     {
       name: "Product Image",
       selector: (row) => (
-        <div className="d-flex align-items-center">
-          <img
-            src={row.picture}
-            // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-            alt=""
-            style={{
-              width: "45px",
-              height: "45px",
-            }}
-            className="rounded-circle"
+        <div className="relative w-14 bg-cover bg-center h-14 flex ">
+          <Image
+            src={row.picture1}
+            // C
+            alt="sjf"
+            fill
+            className="object-cover rounded-full"
           />
-          {/* <div className="ms-3">
-          <p className="fw-bold mb-1">John Doe</p>
-          <p className="text-muted mb-0">
-            john.doe@gmail.com
-          </p>
-        </div> */}
         </div>
+        // <div className="d-flex align-items-center">
+        //   <img
+        //     src={row.picture}
+        //     // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+        //     alt=""
+        //     style={{
+        //       width: "45px",
+        //       height: "45px",
+        //     }}
+        //     className="rounded-circle"
+        //   />
+        //   {/* <div className="ms-3">
+        //   <p className="fw-bold mb-1">John Doe</p>
+        //   <p className="text-muted mb-0">
+        //     john.doe@gmail.com
+        //   </p>
+        // </div> */}
+        // </div>
       ),
     },
     {
@@ -381,9 +391,9 @@ export default function page() {
               data={panier}
               columns={colums1}
               pagination
-              selectableRows
+              // selectableRows
               fixedHeader
-              selectableRowsHighlight
+              // selectableRowsHighlight
               highlightOnHover
               subHeader
               subHeaderComponent={
