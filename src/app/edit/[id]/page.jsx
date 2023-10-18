@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import { notFound } from "next/navigation";
-import Modifproduct from "@/components/modifproduct";
 import { useDispatch, useSelector } from "react-redux";
+
 import {
   recupCateg,
   recupdetail,
@@ -12,6 +12,7 @@ import {
   recupsub_sub_category,
 } from "@/redux/features/productSlice";
 import Axios from "axios";
+import Modifproduct from "../../../components/Modifproduct";
 
 const rep = (id) => {
   // Créez une expression régulière pour correspondre aux lettres alphabétiques
