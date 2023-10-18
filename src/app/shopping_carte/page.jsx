@@ -255,69 +255,78 @@ export default function page() {
     setresponse(response);
   }
 
-  const colums1 = typeof window !== "undefined" && [
-    {
-      name: "Product Image",
-      selector: (row) => (
-        <div className="relative w-14 bg-cover bg-center h-14 flex ">
-          <Image
-            src={row.picture1}
-            // C
-            alt="sjf"
-            fill
-            className="object-cover rounded-full"
-          />
-        </div>
-        // <div className="d-flex align-items-center">
-        //   <img
-        //     src={row.picture}
-        //     // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
-        //     alt=""
-        //     style={{
-        //       width: "45px",
-        //       height: "45px",
-        //     }}
-        //     className="rounded-circle"
-        //   />
-        //   {/* <div className="ms-3">
-        //   <p className="fw-bold mb-1">John Doe</p>
-        //   <p className="text-muted mb-0">
-        //     john.doe@gmail.com
-        //   </p>
-        // </div> */}
-        // </div>
-      ),
-    },
-    {
-      name: "Nom",
-      selector: (row) => <p className="fw-normal mb-1">{row.product_name}</p>,
-    },
-    {
-      name: "Quantite",
-      selector: (row) => (
-        <Changepan
-          className="w-full"
-          product_quantity={row.product_quantity}
-          Stock={row.stock}
-          id={row.id}
-          prix_unite={row.unite_price}
-        />
-        // <span className="font-bold">{row.product_quantity}</span>
-      ),
-    },
-    {
-      name: "Montant",
-      selector: (row) => (
-        <span>{row.unite_price === 0 ? 0 : formatPrice(row.unite_price)}</span>
-      ),
-    },
-    {
-      name: "Total",
-      selector: (row) => (
-        <span>{row.total_price === 0 ? 0 : formatPrice(row.total_price)}</span>
-      ),
-    },
-  ];
+  const colums1 =
+    typeof window !== "undefined"
+      ? [
+          {
+            name: "Product Image",
+            selector: (row) => (
+              <div className="relative w-14 bg-cover bg-center h-14 flex ">
+                <Image
+                  src={row.picture1}
+                  // C
+                  alt="sjf"
+                  fill
+                  className="object-cover rounded-full"
+                />
+              </div>
+              // <div className="d-flex align-items-center">
+              //   <img
+              //     src={row.picture}
+              //     // src="https://mdbootstrap.com/img/new/avatars/8.jpg"
+              //     alt=""
+              //     style={{
+              //       width: "45px",
+              //       height: "45px",
+              //     }}
+              //     className="rounded-circle"
+              //   />
+              //   {/* <div className="ms-3">
+              //   <p className="fw-bold mb-1">John Doe</p>
+              //   <p className="text-muted mb-0">
+              //     john.doe@gmail.com
+              //   </p>
+              // </div> */}
+              // </div>
+            ),
+          },
+          {
+            name: "Nom",
+            selector: (row) => (
+              <p className="fw-normal mb-1">{row.product_name}</p>
+            ),
+          },
+          {
+            name: "Quantite",
+            selector: (row) => (
+              <Changepan
+                className="w-full"
+                product_quantity={row.product_quantity}
+                Stock={row.stock}
+                id={row.id}
+                prix_unite={row.unite_price}
+              />
+              // <span className="font-bold">{row.product_quantity}</span>
+            ),
+          },
+          {
+            name: "Montant",
+            selector: (row) => (
+              <span>
+                {row.unite_price === 0 ? 0 : formatPrice(row.unite_price)}
+              </span>
+            ),
+          },
+          {
+            name: "Total",
+            selector: (row) => (
+              <span>
+                {row.total_price === 0 ? 0 : formatPrice(row.total_price)}
+              </span>
+            ),
+          },
+        ]
+      : [];
 
   useEffect(() => {
     addKkiapayListener("success", successHandler);
@@ -564,5 +573,8 @@ export default function page() {
         </div>
       </div>
     );
+  } else {
+    // Code de secours pour le rendu côté serveur
+    return <div>Contenu non disponible pour le rendu côté serveur.</div>;
   }
 }
