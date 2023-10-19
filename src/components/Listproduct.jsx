@@ -11,6 +11,7 @@ import { recupProduct } from "@/redux/features/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { settrigg } from "@/redux/features/TriggerSlice";
 import Image from "next/image";
+import ReactPaginate from 'react-paginate';
 
 export default function Listproduct() {
   const [add, setadd] = useState(false);
@@ -71,6 +72,15 @@ export default function Listproduct() {
           </div>
         )}
       </div>
+      <ReactPaginate
+        breakLabel="..."
+        nextLabel="suivant >"
+        onPageChange={handlePageClick}
+        pageRangeDisplayed={5}
+        pageCount={pageCount}
+        previousLabel="< precedent"
+        renderOnZeroPageCount={null}
+      />
     </div>
   );
 }

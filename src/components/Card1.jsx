@@ -139,7 +139,7 @@ export default function Card1({ data }) {
           />
         </div>
         <div className="px-2 py-3 space-y-3">
-          <div className="w-full justify-between flex items-center h-10">
+          <div className="w-full justify-between flex items-center h-20">
             <p className="uppercase tracking-wide text-sm font-bold text-gray-700">
               {data.name}
             </p>

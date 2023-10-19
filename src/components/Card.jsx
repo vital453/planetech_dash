@@ -38,7 +38,7 @@ export default function Card({ data }) {
           /> */}
         </div>
         <div className="p-4 space-y-3">
-          <div className="w-full justify-between flex items-center h-10">
+          <div className="w-full justify-between flex items-center h-20">
             <p className="uppercase tracking-wide text-sm font-bold text-gray-700">
               {data.name}
             </p>

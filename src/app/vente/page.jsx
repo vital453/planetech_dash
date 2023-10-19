@@ -3,14 +3,19 @@ import React, { useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
 import Axios from "axios";
-import { recupProduct } from "@/redux/features/productSlice";
+import { recupProduct, recupcaisse } from "@/redux/features/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { settrigg } from "@/redux/features/TriggerSlice";
 
 import { Button } from "@material-tailwind/react";
 import { HiShoppingCart } from "react-icons/hi2";
 import Card1 from "@/components/Card1";
-import { recupPan, setProductPan, vider } from "@/redux/features/panieerSlice";
+import {
+  recupPan,
+  setProductPan,
+  vider,
+  deletepan,
+} from "@/redux/features/panieerSlice";
 import Modal from "react-modal";
 import { IoIosCloseCircle } from "react-icons/io";
 import { useRouter } from "next/navigation";
